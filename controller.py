@@ -14,6 +14,8 @@ class Controller(metaclass=abc.ABCMeta):
         self.actuator_min = actuator_range[0]
         self.actuator_max = actuator_range[1]
 
+        
+
 class PIDControl:
 
     def __init__(self, kp=0.2, ki=0.0, kd=0.0):

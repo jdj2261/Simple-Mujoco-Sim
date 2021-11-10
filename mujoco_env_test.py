@@ -12,18 +12,14 @@ from pykin.robots.single_arm import SingleArm
 from pykin.kinematics.transform import Transform
 
 
-def controller(sim, q, q_des,e_prev,e_int,step,start_step,time_step):
-    K_p = 0.001
-    K_d = 0.1
-    K_i = 1
+def controller(sim, q, q_des,e_prev,e_int,time_step):
+    K_p = 0.01
+    K_d = 0.01
+    K_i = 0.6
     e = np.zeros(7)
 
     for i in range(np.size(q_des,axis=0)):
         e[i] = q_des[i]-q[i]		
-        # if step-start_step < 1:
-        #     sim.data.ctrl[i] = K_p*e[i]
-        # else: 
-        # sim.data.ctrl[i] = K_p*e[i]
         e_d = (e[i]-e_prev[i])/time_step
         e_i = e_int[i] + e[i]*time_step
         sim.data.ctrl[i] = K_p*e[i] + K_d * e_d + K_i * e_i
@@ -48,11 +44,10 @@ q_t = np.array([0.0, np.pi/6, 0.0, -np.pi*12/24, 0.0, np.pi*5/8,0.0])
 fk = robot.forward_kin(q_t)
 eef_pose = robot.get_eef_pose(fk)
 
-while True:
+is_limit = False
+while not is_limit:
     q_desired = robot.inverse_kin(np.random.randn(7), eef_pose)
     is_limit = robot.check_limit_joint(q_desired)
-    if is_limit:
-        break
 
 print(q_desired)
 # q_desired = [5.60215674e-17, 5.23598764e-01, 0.00000000e+00, -1.57079633e+00, 0.00000000e+00, 1.96349541e+00, 7.48387434e-17]
@@ -63,8 +58,6 @@ print(q_desired)
 
 e_prev = np.zeros(7)
 e_int = np.zeros(7)
-start_step = 0
-step = 0
 
 time_step = 0.002
 sim_state = sim.get_state()
@@ -72,10 +65,9 @@ sim_state = sim.get_state()
 while True:
     sim_state = sim.get_state()
     q = sim_state.qpos[0:7]
-    e_prev = controller(sim,q, q_desired,e_prev,e_int,step,start_step,time_step)
+    e_prev = controller(sim,q, q_desired,e_prev,e_int,time_step)
     e_int = e_int + e_prev*time_step
 
-    step += 1
     sim.step()
     viewer.render()
 
