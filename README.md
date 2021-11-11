@@ -1,1 +1,2 @@
-# Welcome to Mujoco Tutorial
+# Welcome to Mujoco World
+
