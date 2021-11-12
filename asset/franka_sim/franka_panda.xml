@@ -20,10 +20,10 @@
 	<body name="Table" pos="0.5 0 0.5">
 		<include file="table/chain.xml"/>	
     	</body>
-	<body name="obj" pos="0.7 0.0 0.7" euler="0 0 0">
+	<!-- <body name="obj" pos="0.7 0.0 0.7" euler="0 0 0">
 		<geom name = "object" type="box" size=".1 .03 .13" rgba="0.9 0.7 0.7 1.0" mass ="0.005"/>
 		<joint type="free" limited="false"/>
-	</body>
+	</body> -->
     </worldbody>
 
     <include file='assets/actuator0.xml'/>

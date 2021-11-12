@@ -1,18 +1,22 @@
 import abc
 import numpy as np
+import mujoco_py
 
 from collections.abc import Iterable
+
 
 class Controller(metaclass=abc.ABCMeta):
     def __init__(
         self,
         sim,
-        robot,
+        eef_name,
+        arm_dof,
         actuator_range=None
     ):
 
         self.sim = sim
-        self.robot = robot
+        self.eef_name = eef_name
+        self.arm_dof = arm_dof
         self.actuator_range = actuator_range
 
         if actuator_range is not None:
@@ -23,22 +27,18 @@ class Controller(metaclass=abc.ABCMeta):
         self._setup_robot_state()
 
         self.new_update = True
+        self.time_step = self.sim.model.opt.timestep
 
+        self.sim_state = self.sim.get_state()
+        print(self.sim_state)
         self.sim.forward()
-        self.update()
+        self.update(self.sim)
 
     def _setup_mujoco_state(self):
-        self.robot_joints = self.robot.get_revolute_joint_names()
-        self.qpos_index = [
-            self.sim.model.get_joint_qpos_addr(x) 
-            for x in self.robot_joints
-        ]
-        
-        self.qvel_index = [
-            self.sim.model.get_joint_qvel_addr(x) 
-            for x in self.robot_joints
-        ]
-
+        self.arm_joints = [self.sim.model.joint_id2name(x) for x in range(self.arm_dof)]
+        self.qpos_index = [self.sim.model.get_joint_qpos_addr(x) for x in self.arm_joints]
+        self.qvel_index = [self.sim.model.get_joint_qvel_addr(x) for x in self.arm_joints]
+ 
         # indices for joint indexes
         self.joint_index = [
             self.sim.model.joint_name2id(joint)
@@ -50,17 +50,14 @@ class Controller(metaclass=abc.ABCMeta):
             for actuator in self.sim.model._actuator_name2id.keys()
         ]
 
-        self.gripper_index = list(
-            set(self.actuator_index).difference(self.qpos_index)
-        )
-
+        self.gripper_index = list(set(self.actuator_index).difference(self.qpos_index))
+       
     def _setup_robot_state(self):
-        self.eef_name = self.robot.eef_name
         self.eef_index = self.sim.model.body_name2id(self.eef_name)
-        self.ee_pos = None
-        self.ee_ori_mat = None
-        self.ee_pos_vel = None
-        self.ee_ori_vel = None
+        self.eef_pos = None
+        self.eef_ori_mat = None
+        self.eef_pos_vel = None
+        self.eef_ori_vel = None
         self.joint_pos = None
         self.joint_vel = None
 
@@ -71,14 +68,34 @@ class Controller(metaclass=abc.ABCMeta):
         into torques (pre gravity compensation) to be executed on the robot.
         Additionally, resets the self.new_update flag so that the next self.update call will occur
         """
-        self.new_update = True
+        pass
 
-    def update(self):
-        if self.new_update:
-            self.sim.forward()
+    def update(self, sim):
+        self.sim = sim
+        self.sim.forward()
+        self.sim_state = self.sim.get_state()
+        self.q_pos = self.sim_state.qpos[self.qpos_index]
+        self.q_vel = self.sim_state.qvel[self.qvel_index]
+        self.eef_pos = np.array(self.sim.data.body_xpos[self.sim.model.body_name2id(self.eef_name)])
+        self.eef_ori_mat = np.array(self.sim.data.body_xmat[self.sim.model.body_name2id(self.eef_name)].reshape([3, 3]))
+        self.eef_pos_vel = np.array(self.sim.data.body_xvelp[self.sim.model.body_name2id(self.eef_name)])
+        self.eef_ori_vel = np.array(self.sim.data.body_xvelr[self.sim.model.body_name2id(self.eef_name)])
 
-            self.ee_pos = np.array()
-            self.new_update = False
+        self.torque_compensation =  self.sim.data.qfrc_bias[self.qvel_index]
+        
+        self.joint_pos = np.array(self.sim.data.qpos[self.qpos_index])
+        self.joint_vel = np.array(self.sim.data.qvel[self.qvel_index])
+
+        self.J_pos = np.array(self.sim.data.get_body_jacp(self.eef_name).reshape((3, -1))[:, self.qvel_index])
+        self.J_ori = np.array(self.sim.data.get_body_jacr(self.eef_name).reshape((3, -1))[:, self.qvel_index])
+        self.J_full = np.array(np.vstack([self.J_pos, self.J_ori]))
+
+        mass_matrix = np.ndarray(shape=(len(self.sim.data.qvel) ** 2,), dtype=np.float64, order='C')
+        mujoco_py.cymj._mj_fullM(self.sim.model, mass_matrix, self.sim.data.qM)
+        mass_matrix = np.reshape(mass_matrix, (len(self.sim.data.qvel), len(self.sim.data.qvel)))
+        self.mass_matrix = mass_matrix[self.qvel_index, :][:, self.qvel_index]
+
+        self.new_update = False
 
     def clip_torques(self, torques):
         return np.clip(torques, self.torque_limits[0], self.torque_limits[1])
@@ -92,6 +109,7 @@ class Controller(metaclass=abc.ABCMeta):
     def is_contact(self):
         pass
 
+    @abc.abstractmethod
     def is_reached(self):
         pass
 
@@ -128,9 +146,9 @@ class Controller(metaclass=abc.ABCMeta):
         # Else, input is a single value, so we map to a numpy array of correct size and return
         return np.array(nums) if isinstance(nums, Iterable) else np.ones(dim) * nums
 
-    @property
-    def torque_compensation(self):
-        return self.sim.data.qfrc_bias[self.qvel_index]
+    # @property
+    # def torque_compensation(self):
+    #     return self.sim.data.qfrc_bias[self.qvel_index]
 
     @property
     def joint_limits(self):
@@ -140,8 +158,8 @@ class Controller(metaclass=abc.ABCMeta):
 
     @property
     def torque_limits(self):
-        low = self.sim.model.actuator_ctrlrange[self.actuator_index, 0]
-        high = self.sim.model.actuator_ctrlrange[self.actuator_index, 1]
+        low = self.sim.model.actuator_ctrlrange[self.qpos_index, 0]
+        high = self.sim.model.actuator_ctrlrange[self.qpos_index, 1]
         return low, high
 
     @property
@@ -149,6 +167,15 @@ class Controller(metaclass=abc.ABCMeta):
         if self.actuator_range is None:
             return self.torque_limits
         return self.input_actuator_min, self.input_actuator_max
+
+    @property
+    def time_step(self):
+        return self.sim.model.opt.timestep
+
+    @time_step.setter
+    def time_step(self, time):
+        self.sim.model.opt.timestep = time
+
 
 
 if __name__ == "__main__":
@@ -171,66 +198,20 @@ if __name__ == "__main__":
     robot = SingleArm(urdf_path, offset=Transform(rot=[1, 0, 0, 0], pos=[0, 0, 0.5]))
     robot.setup_link_name("panda_link0", "panda_link7")
 
-    controller = Controller(sim=sim, robot=robot)
-    print(controller.actuator_index)
-    print(controller.joint_index)
+    print(sim.model.joint_names)
+    controller = Controller(sim=sim, eef_name=robot.eef_name, arm_dof=robot.arm_dof)
+
+    # print(controller.eef_pos)
+    # print(controller.ee_ori_mat)
+    # print(controller.J_full)
+    # print(controller.mass_matrix)
+    print(controller.torque_limits)
+
+    # print(controller.qpos_index)
+    # print(controller.qvel_index)
+    # print(controller.actuator_index)
+    # print(controller.joint_index)
 
 
-    print(sim.data.body_xpos(model.body_name2id(robot.eef_name))
-    # print(controller.ref_joint_vel_indexes)
-    # print(controller.ref_joint_pos_indexes)
-    # print(controller.eef_name)
-    # print(controller.ref_gripper_indexes)
-    # print(controller.joint_limits)
-    # print(controller.torque_compensation)
-    # print(controller.torque_limits)
+    # print(sim.data.body_xpos(model.body_name2id(robot.eef_name)))
 
-
-# def joint_position_control(sim, goal_qpos):
-#     # desired torque: right arm
-#     joint_pos_right = np.array(sim.data.qpos[qpos_idx_right])
-#     joint_vel_right = np.array(sim.data.qvel[qvel_idx_right])
-
-#     position_error_right = goal_qpos[:7] - joint_pos_right
-#     vel_pos_error_right = -joint_vel_right
-#     desired_torque_right = (np.multiply(np.array(position_error_right), kp*np.ones(len(qpos_idx_right)))
-#                             + np.multiply(vel_pos_error_right, kd*np.ones(len(qvel_idx_right))))
-
-#     # desired torque: left arm
-#     joint_pos_left = np.array(sim.data.qpos[qpos_idx_left])
-#     joint_vel_left = np.array(sim.data.qvel[qvel_idx_left])
-
-#     position_error_left = goal_qpos[7:] - joint_pos_left
-#     vel_pos_error_left = -joint_vel_left
-#     desired_torque_left = (np.multiply(np.array(position_error_left), kp*np.ones(len(qpos_idx_left)))\
-#                            + np.multiply(vel_pos_error_left, kd*np.ones(len(qvel_idx_left))))
-
-#     # calculate mass-matrix
-#     mass_matrix = np.ndarray(shape=(len(sim.data.qvel) ** 2,), dtype=np.float64, order='C')
-#     cymj._mj_fullM(sim.model, mass_matrix, sim.data.qM)
-#     mass_matrix = np.reshape(mass_matrix, (len(sim.data.qvel), len(sim.data.qvel)))
-#     mass_matrix_right = mass_matrix[qvel_idx_right, :][:, qvel_idx_right]
-#     mass_matrix_left = mass_matrix[qvel_idx_left, :][:, qvel_idx_left]
-
-#     # calculate torque-compensation
-#     torque_compensation_right = sim.data.qfrc_bias[qvel_idx_right]
-#     torque_compensation_left = sim.data.qfrc_bias[qvel_idx_left]
-
-#     # calculate torque values
-#     torques_right = np.dot(mass_matrix_right, desired_torque_right) + torque_compensation_right
-#     torques_left = np.dot(mass_matrix_left, desired_torque_left) + torque_compensation_left
-
-#     torques = np.concatenate((torques_right, torques_left))
-#     torques = np.clip(torques, torques_low, torques_high)
-
-#     goal_reach = True
-#     for i in range(len(position_error_right)):
-#         if np.abs(position_error_right[i]) > 0.01:
-#             goal_reach = False
-#             break
-#     for i in range(len(position_error_left)):
-#         if np.abs(position_error_left[i]) > 0.01:
-#             goal_reach = False
-#             break
-
-#     return torques, goal_reach
