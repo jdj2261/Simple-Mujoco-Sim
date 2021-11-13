@@ -1,9 +1,6 @@
 import numpy as np
 import sys, os
 
-mj_controller_path = os.path.abspath(os.path.dirname(__file__)+"/.." )
-sys.path.append(mj_controller_path)
-
 from mj_controller.base_controller import Controller
 
 
@@ -22,38 +19,9 @@ class JointPositionController(Controller):
         self.control_dim = arm_dof
 
         self.kp = self.nums2array(kp, self.control_dim)
-        self.ki = self.nums2array(30, self.control_dim) # 20
-        self.kd = self.nums2array(40, self.control_dim) # 25
+        self.ki = self.nums2array(0, self.control_dim) # 20
+        self.kd = self.nums2array(0, self.control_dim) # 25
         
-        self.kp[0] = 3000
-        self.ki[0] = 40
-        self.kd[0] = 20
-
-        self.kp[1] = 500
-        self.ki[1] = 20
-        self.kd[1] = 50
-    
-        self.kp[2] = 5000
-        self.ki[2] = 50
-        self.kd[2] = 30
-
-        self.kp[3] = 500
-        self.ki[3] = 23
-        self.kd[3] = 40
-
-        self.kp[4] = 7000
-        self.ki[4] = 20
-        self.kd[4] = 60
-
-        self.kp[5] = 6000
-        self.ki[5] = 50
-        self.kd[5] = 30
-
-        self.kp[6] = 3000
-        self.ki[6] = 30
-        self.kd[6] = 30
-
-
 
         # self.kp[3] = 60
         # self.ki[3] = 15    # 80
@@ -67,9 +35,9 @@ class JointPositionController(Controller):
         # self.ki[5] = 50    # 80
         # self.kd[5] = 10    # 50
 
-        # self.kp = self.nums2array(0.001, self.control_dim)
-        # self.ki = self.nums2array(1, self.control_dim) # 20
-        # self.kd = self.nums2array(0.1, self.control_dim) # 25
+        self.kp = self.nums2array(0.001, self.control_dim)
+        self.ki = self.nums2array(1, self.control_dim) # 20
+        self.kd = self.nums2array(0.1, self.control_dim) # 25
 
         self.position_limits = np.array(qpos_limits) if qpos_limits is not None else self.joint_limits
         self.summed_err = 0
@@ -89,8 +57,9 @@ class JointPositionController(Controller):
                          self.summed_err * self.ki + \
                          vel_pos_error   * self.kd
 
-        # self.torques = desired_torque        
-        self.torques = np.dot(self.mass_matrix, desired_torque) + self.torque_compensation
+        self.torques = desired_torque     
+        # self.torques = np.dot(self.mass_matrix, desired_torque) + self.torque_compensation
+        
         self.torques = self.clip_torques(self.torques)
 
         return self.torques
