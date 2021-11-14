@@ -59,6 +59,7 @@ class Controller(metaclass=abc.ABCMeta):
         self.eef_ori_vel = None
         self.joint_pos = None
         self.joint_vel = None
+        self.err_qpos = None
 
     def update(self, sim):
         self.sim = sim
@@ -87,6 +88,10 @@ class Controller(metaclass=abc.ABCMeta):
     def clip_torques(self, torques):
         return np.clip(torques, self.torque_limits[0], self.torque_limits[1])
 
+    def clip_anti_wiseup(self, torques):
+        return np.clip(torques, -self.windupMax, self.windupMax)
+
+
     def open_gripper(self):
         pass
 
@@ -114,10 +119,8 @@ class Controller(metaclass=abc.ABCMeta):
     def is_reached(self):
         eps = 1e-2
         _is_reached = False
-        err_qpos = np.array([abs(self.joint_pos[i] - self.goal_qpos[i]) for i in self.qpos_index])
 
-        self.err_qpos = err_qpos
-        if np.all(err_qpos < eps):
+        if np.all(self.err_qpos < eps):
             _is_reached = True
 
         return _is_reached
@@ -158,3 +161,27 @@ class Controller(metaclass=abc.ABCMeta):
     @time_step.setter
     def time_step(self, time):
         self.sim.model.opt.timestep = time
+
+    @property
+    def kp(self):
+        return self._kp
+
+    @kp.setter
+    def kp(self, kp):
+        self._kp = kp
+
+    @property
+    def ki(self):
+        return self._ki
+
+    @ki.setter
+    def ki(self, ki):
+        self._ki = ki
+
+    @property
+    def kd(self):
+        return self._kd
+
+    @kd.setter
+    def kd(self, kd):
+        self._kd = kd

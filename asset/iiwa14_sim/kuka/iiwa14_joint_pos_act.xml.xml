@@ -1,0 +1,9 @@
+<mujoco>
+  <position name="iiwa14_joint_1" ctrllimited="true" ctrlrange="-300.0 300.0" joint="iiwa14_joint_1"/>
+  <position name="iiwa14_joint_2" ctrllimited="true" ctrlrange="-300.0 300.0" joint="iiwa14_joint_2"/>
+  <position name="iiwa14_joint_3" ctrllimited="true" ctrlrange="-300.0 300.0" joint="iiwa14_joint_3"/>
+  <position name="iiwa14_joint_4" ctrllimited="true" ctrlrange="-300.0 300.0" joint="iiwa14_joint_4"/>
+  <position name="iiwa14_joint_5" ctrllimited="true" ctrlrange="-300.0 300.0" joint="iiwa14_joint_5"/>
+  <position name="iiwa14_joint_6" ctrllimited="true" ctrlrange="-300.0 300.0" joint="iiwa14_joint_6"/>
+  <position name="iiwa14_joint_7" ctrllimited="true" ctrlrange="-300.0 300.0" joint="iiwa14_joint_7"/>
+</mujoco>
