@@ -24,21 +24,18 @@ class Controller(metaclass=abc.ABCMeta):
             self.input_actuator_min = actuator_range[0]
             self.input_actuator_max = actuator_range[1]
 
-        self._setup_mujoco_state()
         self._setup_robot_state()
 
         self.sim.forward()
         self.time_step = self.sim.model.opt.timestep
         self.sim_state = self.sim.get_state()
-
-
         self.update(self.sim)
 
     @abc.abstractmethod
     def run_controller(self):
         pass
 
-    def _setup_mujoco_state(self):
+    def _setup_robot_state(self):
         self.arm_joints = [self.sim.model.joint_id2name(x) for x in range(self.arm_dof)]
         self.qpos_index = [self.sim.model.get_joint_qpos_addr(x) for x in self.arm_joints]
         self.qvel_index = [self.sim.model.get_joint_qvel_addr(x) for x in self.arm_joints]
@@ -55,8 +52,6 @@ class Controller(metaclass=abc.ABCMeta):
         ]
 
         self.gripper_index = list(set(self.actuator_index).difference(self.qpos_index))
-       
-    def _setup_robot_state(self):
         self.eef_index = self.sim.model.body_name2id(self.eef_name)
         self.eef_pos = None
         self.eef_ori_mat = None
@@ -98,13 +93,13 @@ class Controller(metaclass=abc.ABCMeta):
     def close_gripper(self):
         pass
 
+    #TODO
     def is_contact(self):
         contact_l = self.sim.data.contact[self.gripper_index[0]]
         contact_r = self.sim.data.contact[self.gripper_index[1]]
         is_left_contact = False
         is_right_contact = False
-        # print(self.sim.model.geom_id2name(contact_l.geom1))
-        # print(contact_l.dist, contact_r.dist)
+
         if self.sim.model.geom_id2name(contact_l.geom1) == "object" or self.sim.model.geom_id2name(contact_l.geom2) == "object":
             is_left_contact = True
         if self.sim.model.geom_id2name(contact_r.geom1) == "object" or self.sim.model.geom_id2name(contact_r.geom2) == "object":

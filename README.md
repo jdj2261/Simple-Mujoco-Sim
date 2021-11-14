@@ -1,2 +1,2 @@
-# Welcome to Mujoco World
+# Welcome to franka panda's MuJoCo world
 

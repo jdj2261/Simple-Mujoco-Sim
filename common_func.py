@@ -8,15 +8,14 @@ from pykin.robots.single_arm import SingleArm
 from pykin.kinematics.transform import Transform
 from mj_controller.joint_pos import JointPositionController
 
-def load_mujoco():
-    mj_model = load_model_from_path("asset/franka_sim/franka_panda.xml")
+def load_mujoco(path):
+    mj_model = load_model_from_path(path)
     sim = MjSim(mj_model)
     viewer = MjViewer(sim)
     return sim, viewer
 
-def load_pykin():
-    panda_urdf_path = 'pykin/asset/urdf/panda/panda.urdf'
-    robot = SingleArm(panda_urdf_path, offset=Transform(rot=[1, 0, 0, 0], pos=[0, 0, 0.5]))
+def load_pykin(path):
+    robot = SingleArm(path, offset=Transform(rot=[1, 0, 0, 0], pos=[0, 0, 0.5]))
     robot.setup_link_name(base_name="panda_link0", eef_name="panda_link7")
     return robot
 
