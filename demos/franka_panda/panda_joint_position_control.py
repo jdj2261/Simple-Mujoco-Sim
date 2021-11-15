@@ -2,9 +2,9 @@ import numpy as np
 import time
 import sys, os
 
-controller_path = os.path.abspath(os.path.dirname(__file__) + "/../../")
+controller_path = os.path.abspath(os.path.abspath(__file__) + "/../../../")
 sys.path.append(controller_path)
-demo_path = os.path.abspath(os.path.dirname(__file__) + "/..")
+demo_path = os.path.abspath(os.path.abspath(__file__) + "/../../")
 sys.path.append(demo_path)
 
 from mj_controller.joint_pos import JointPositionController
