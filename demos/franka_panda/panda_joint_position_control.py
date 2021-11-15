@@ -27,8 +27,6 @@ def main():
     jpos_controller.ki = np.array([8,   8, 10, 8, 8, 8, 8])
     jpos_controller.kd = np.array([40, 40, 40, 40, 40, 40, 40])
 
-
-    print(jpos_controller.torque_limits)
     cnt = 0
     is_grasp = False
     while True:

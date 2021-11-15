@@ -11,16 +11,16 @@ class JointPositionController(Controller):
         eef_name=None,
         arm_dof=7,
         actuator_range=None,
-        kp=0, # 5000,
+        kp=50,
         ki=0,
-        kd=0,
+        kd=22,
         qpos_limits=None,
     ):
         super().__init__(sim, eef_name, arm_dof, actuator_range)
 
         self.control_dim = arm_dof
         
-        self.windupMax = self.nums2array(1, self.control_dim)
+        self.windup = self.nums2array(1, self.control_dim)
 
         self._kp = self.nums2array(kp, self.control_dim)
         self._ki = self.nums2array(ki, self.control_dim) 
@@ -53,3 +53,6 @@ class JointPositionController(Controller):
         self.torques = self.clip_torques(self.torques)
 
         return self.torques
+
+    def clip_anti_wiseup(self, torques):
+        return np.clip(torques, -self.windup, self.windup)

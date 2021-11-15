@@ -88,16 +88,6 @@ class Controller(metaclass=abc.ABCMeta):
     def clip_torques(self, torques):
         return np.clip(torques, self.torque_limits[0], self.torque_limits[1])
 
-    def clip_anti_wiseup(self, torques):
-        return np.clip(torques, -self.windupMax, self.windupMax)
-
-
-    def open_gripper(self):
-        pass
-
-    def close_gripper(self):
-        pass
-
     #TODO
     def is_contact(self):
         contact_l = self.sim.data.contact[self.gripper_index[0]]
@@ -115,21 +105,14 @@ class Controller(metaclass=abc.ABCMeta):
             return True
         return False
 
-
     def is_reached(self):
         eps = 1e-2
-        _is_reached = False
-
-        if np.all(self.err_qpos < eps):
-            _is_reached = True
-
-        return _is_reached
+        return True if np.all(self.err_qpos < eps) else False
 
     @staticmethod
     def nums2array(nums, dim):
         if isinstance(nums, str):
             raise TypeError("Error: Only numeric inputs are supported for this function, nums2array!")
-
         return np.array(nums) if isinstance(nums, Iterable) else np.ones(dim) * nums
 
     @property
