@@ -2,4 +2,4 @@ pykin
 .DS_Store
 .vscode
 __pycache__
-
+pid_tmp

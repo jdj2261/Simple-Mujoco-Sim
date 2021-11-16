@@ -1,6 +1,4 @@
 import numpy as np
-import sys, os
-
 from mj_controller.base_controller import Controller
 
 
@@ -19,15 +17,13 @@ class JointPositionController(Controller):
         super().__init__(sim, eef_name, arm_dof, actuator_range)
 
         self.control_dim = arm_dof
-        
-        self.windup = self.nums2array(1, self.control_dim)
-
         self._kp = self.nums2array(kp, self.control_dim)
         self._ki = self.nums2array(ki, self.control_dim) 
         self._kd = self.nums2array(kd, self.control_dim)
         
         self.position_limits = np.array(qpos_limits) if qpos_limits is not None else self.joint_limits
-        self.summed_err = 0
+        self.summed_err = 0                
+        self.windup = self.nums2array(self.torque_limits[1]/2, self.control_dim)
         
     def run_controller(self, sim, q_desired):
         self.goal_qpos = np.array(q_desired)
