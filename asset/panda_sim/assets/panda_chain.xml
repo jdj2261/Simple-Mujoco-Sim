@@ -11,8 +11,7 @@
 
     <camera pos="0 0 3.2" name="topview" />
 
-
-    <body name="pedestal" pos="0 0 0.95">
+    <body name="pedestal" pos="0 0 0.92">
         <inertial pos="0 0 0" quat="0.659267 -0.259505 -0.260945 0.655692" mass="60.864" diaginertia="6.0869 5.81635 4.20915" />
         <geom class="pedestal_viz" pos="0.26 0.345 -0.91488" quat="0.5 0.5 -0.5 -0.5" type="mesh" contype="0" conaffinity="0" group="1"  mesh="pedestal" />
         <geom class="pedestal_viz" size="0.18 0.31" pos="-0.02 0 -0.29" type="cylinder" rgba="0.2 0.2 0.2 0" />
@@ -75,7 +74,7 @@
                                             <geom size="0.009 0.0075 0.0089" pos="0.00 -0.0072 0.045" type="box" euler='0 0 0' />
                                         </body>
                                         <!--<geom size="0.0185 0.0120 0.0175" pos="0 -.014 0.015" type="box" euler='-.03 0 0' />-->
-                                    </body>
+                                    <!-- </body> -->
                                 </body>
                             </body>
                         </body>

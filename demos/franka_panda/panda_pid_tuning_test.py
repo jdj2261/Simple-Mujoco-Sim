@@ -17,7 +17,7 @@ def main():
     n_timesteps = int(5/0.002)
     qlog = np.zeros((n_timesteps, 7))
 
-    sim, viewer = load_mujoco("../../asset/franka_sim/franka_panda.xml")
+    sim, viewer = load_mujoco("../../asset/panda_sim/franka_panda.xml")
     panda_robot = load_pykin('../../pykin/asset/urdf/panda/panda.urdf')
     panda_robot.setup_link_name("panda_link0", "panda_link7")
 
@@ -29,9 +29,9 @@ def main():
     result_qpos = get_result_qpos(panda_robot, init_qpos, eef_pose)
 
     jpos_controller = JointPositionController(sim=sim, eef_name=panda_robot.eef_name)
-    jpos_controller.kp = np.array([2500, 2500, 2500, 2500, 2500, 2500, 2500])
-    jpos_controller.ki = np.array([8,   8, 10, 8, 8, 8, 8])
-    jpos_controller.kd = np.array([40, 40, 40, 40, 40, 40, 40])
+    jpos_controller.kp = np.array([50, 50, 50, 50, 50, 50, 50])
+    jpos_controller.ki = np.array([0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1])
+    jpos_controller.kd = np.array([22.2, 22.2, 22.2, 22.2, 22.2, 22.2, 22.2])
 
     while t < n_timesteps:
         torque = jpos_controller.run_controller(sim, result_qpos)

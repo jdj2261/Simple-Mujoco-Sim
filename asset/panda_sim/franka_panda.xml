@@ -1,0 +1,21 @@
+<mujoco model="franka_panda">
+    
+    <!-- panda assets-->
+    <include file="assets/panda_assets.xml"/>
+    
+    <!-- arenta -->
+    <include file="assets/empty_arena.xml"/>
+
+    <!-- objects -->
+    <include file="assets/panda_objects.xml"/>
+    
+    <!-- panda mujoco xml-->
+    <include file="assets/panda_body.xml" meshdir="../"/>
+
+    <!-- panda arm actuator-->
+    <include file="assets/panda_arm_motor_actuator.xml"/>
+
+    <!-- panda gripper actuator-->
+    <include file="assets/panda_gripper_position_actuator.xml"/>
+
+</mujoco>

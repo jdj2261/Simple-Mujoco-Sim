@@ -1,4 +1,4 @@
-<mujoco model="can">
+<mujocoinclude>
   <asset>
     <mesh file="meshes/can.stl" name="can_mesh"/>
     <texture file="../textures/can.png" name="tex-can"/>
@@ -14,4 +14,4 @@
       <site rgba="0 0 0 0" size="0.005" pos="0.025 0.025 0" name="horizontal_radius_site"/>
     </body>
   </worldbody>
-</mujoco>
+</mujocoinclude>

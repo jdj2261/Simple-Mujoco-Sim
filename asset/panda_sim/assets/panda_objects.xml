@@ -1,0 +1,53 @@
+<mujocoinclude>
+
+  <asset>
+    <mesh file="meshes/objects/can.stl" name="can_mesh"/>
+    <texture file="textures/can.png" name="tex-can"/>
+    <material name="coke" reflectance="0.7" texrepeat="5 5" texture="tex-can" texuniform="true"/>
+  </asset>
+
+  <asset>
+    <mesh file="meshes/objects/milk.stl" name="milk_mesh" scale="0.9 0.9 0.9"/>
+    <texture file="textures/ceramic.png" name="tex-ceramic"/>
+    <material name="ceramic" reflectance="0.5" texrepeat="1 1" texture="tex-ceramic" texuniform="true"/>
+  </asset>
+
+  <asset>
+    <texture file="textures/steel-scratched.png" type="cube" name="steel-metal"/>
+    <material name="smetal" reflectance="1.0" shininess="1.0" specular="1.0" texrepeat="1 1" texture="steel-metal" texuniform="true"/>
+  </asset>
+
+  <asset>
+    <mesh file="meshes/objects/bread.stl" name="bread_mesh" scale="0.8 0.8 0.8"/>
+    <texture file="textures/bread.png" type="2d" name="tex-bread" />
+    <material name="bread" reflectance="0.7" texrepeat="15 15" texture="tex-bread" texuniform="true"/>
+  </asset>
+
+  <worldbody>
+    <body>
+        <body name="object" pos="0.75 -0.25 0.85">
+            <!-- can -->
+            <geom name="coke" pos="-0.1 -0.15 0" mesh="can_mesh" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" material="coke" group="0" condim="4"/>
+            <!-- milk -->
+            <geom name="milk" pos="-0.1 0.15 0" mesh="milk_mesh" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" material="ceramic" group="0" condim="4"/>
+            <!-- round nut -->
+            <geom name="steel_metal" pos="-0.04245 0 0.0" size="0.01125 0.0225 0.01" type="box" solimp="0.998 0.998 0.001" solref="0.02 1" density="100" friction="0.95 0.3 0.1" group="0" condim="4" material="smetal" />
+            <geom name="steel_metal2" pos="0.04245 0 0.0" size="0.01125 0.0225 0.01" type="box" solimp="0.998 0.998 0.001" solref="0.02 1" density="100" friction="0.95 0.3 0.1" group="0" condim="4" material="smetal" />
+            <geom name="steel_metal3" pos="0 -0.04245 0.0" size="0.0225 0.01125 0.01" type="box" solimp="0.998 0.998 0.001" solref="0.02 1" density="100" friction="0.95 0.3 0.1" group="0" condim="4" material="smetal" />
+            <geom name="steel_metal4" pos="0 0.04245 0.0" size="0.0225 0.01125 0.01" type="box" solimp="0.998 0.998 0.001" solref="0.02 1" density="100" friction="0.95 0.3 0.1" group="0" condim="4" material="smetal" />
+            <geom name="steel_metal5" pos="-0.03 -0.03 0.0" size="0.01125 0.0225 0.01" axisangle='0 0 1 0.785398' type="box" solimp="0.998 0.998 0.001" solref="0.02 1" density="100" friction="0.95 0.3 0.1" group="0" condim="4" material="smetal" />
+            <geom name="steel_metal6" pos="0.03 0.03 0.0" size="0.01125 0.0225 0.01" axisangle='0 0 1 0.785398' type="box" solimp="0.998 0.998 0.001" solref="0.02 1" density="100" friction="0.95 0.3 0.1" group="0" condim="4" material="smetal" />
+            <geom name="steel_metal7" pos="0.03 -0.03 0.0" size="0.0225 0.01125 0.01" axisangle='0 0 1 0.785398' type="box" solimp="0.998 0.998 0.001" solref="0.02 1" density="100" friction="0.95 0.3 0.1" group="0" condim="4" material="smetal" />
+            <geom name="steel_metal8" pos="-0.03 0.03 0.0" size="0.0225 0.01125 0.01" axisangle='0 0 1 0.785398' type="box" solimp="0.998 0.998 0.001" solref="0.02 1" density="100" friction="0.95 0.3 0.1" group="0" condim="4" material="smetal" />
+            <geom name="steel_metal9" pos="0.06 0 0.0" size="0.02525 0.015875 0.01" type="box" solimp="0.998 0.998 0.001" solref="0.02 1" density="100" friction="0.95 0.3 0.1" group="0" condim="4" material="smetal" />
+            <!-- bread -->
+            <geom name="bread" pos="-0.13 0 0" mesh="bread_mesh" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="50" friction="0.95 0.3 0.1"  material="bread" group="0" condim="4"/>
+        </body>
+        
+        <site rgba="0 0 0 0" size="0.005" pos="0 0 -0.06" name="bottom_site"/>
+        <site rgba="0 0 0 0" size="0.005" pos="0 0 0.04" name="top_site"/>
+        <site rgba="0 0 0 0" size="0.005" pos="0.025 0.025 0" name="horizontal_radius_site"/>
+    </body>
+  </worldbody>
+  
+</mujocoinclude>

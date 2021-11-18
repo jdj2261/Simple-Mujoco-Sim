@@ -14,7 +14,7 @@ def load_mujoco(path):
     return sim, viewer
 
 def load_pykin(path):
-    robot = SingleArm(path, offset=Transform(rot=[1, 0, 0, 0], pos=[0, 0, 0.5]))
+    robot = SingleArm(path, offset=Transform(rot=[1, 0, 0, 0], pos=[0, 0, 0.92]))
     return robot
 
 def get_result_qpos(robot, init_qpos, eef_pos):
