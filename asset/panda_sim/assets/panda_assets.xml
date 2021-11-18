@@ -1,8 +1,4 @@
 <mujocoinclude>
-
-    <compiler angle="radian" meshdir="" inertiagrouprange="0 0"/>
-    <option impratio="20" cone="elliptic" density="1.2" viscosity="0.00002"/>
-    <size nconmax="5000" njmax="5000"/>
     <asset>
         <mesh name="panda_link0" file="meshes/visual/link0.stl" />
         <mesh name="panda_link1" file="meshes/visual/link1.stl" />
@@ -23,14 +19,14 @@
     </asset>
     
     <asset>
-        <mesh name="pedestal" file="meshes/rethink_mount/pedestal.stl" />
+        <mesh name="panda_pedestal" file="meshes/rethink_mount/pedestal.stl" />
     </asset>
     
     <asset>
-        <mesh name="hand" file="meshes/visual/hand.stl" />
-        <mesh name="hand_vis" file="meshes/visual/hand_vis.stl" />
-        <mesh name="finger" file="meshes/visual/finger.stl" />
-        <mesh name="finger_vis" file="meshes/visual/finger_vis.stl" />
-        <mesh name="finger_vis2" file="meshes/visual/finger_longer.stl" />
+        <mesh name="panda_hand" file="meshes/visual/hand.stl" />
+        <mesh name="panda_hand_vis" file="meshes/visual/hand_vis.stl" />
+        <mesh name="panda_finger" file="meshes/visual/finger.stl" />
+        <mesh name="panda_finger_vis" file="meshes/visual/finger_vis.stl" />
+        <mesh name="panda_finger_vis2" file="meshes/visual/finger_longer.stl" />
     </asset>
 </mujocoinclude>

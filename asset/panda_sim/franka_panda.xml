@@ -1,16 +1,19 @@
 <mujoco model="franka_panda">
+    <compiler angle="radian" meshdir="" inertiagrouprange="0 0"/>
+    <option impratio="20" cone="elliptic" density="1.2" viscosity="0.00002"/>
+    <size nconmax="5000" njmax="5000"/>
     
     <!-- panda assets-->
     <include file="assets/panda_assets.xml"/>
-    
-    <!-- arenta -->
-    <include file="assets/empty_arena.xml"/>
+
+    <!-- arena -->
+    <include file="../../asset/common_arena/empty_arena.xml"/>
 
     <!-- objects -->
     <include file="assets/panda_objects.xml"/>
-    
-    <!-- panda mujoco xml-->
-    <include file="assets/panda_body.xml" meshdir="../"/>
+
+    <!-- panda body xml-->
+    <include file="assets/panda_body.xml"/>
 
     <!-- panda arm actuator-->
     <include file="assets/panda_arm_motor_actuator.xml"/>

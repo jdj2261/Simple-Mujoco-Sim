@@ -1,0 +1,30 @@
+<mujocoinclude>    
+    <asset>
+    	<mesh name="sawyer_base" file="meshes/base.stl" />
+    	<mesh name="sawyer_l0"	file="meshes/l0.stl" />
+    	<mesh name="sawyer_head" file="meshes/head.stl" />
+    	<mesh name="sawyer_l1"	file="meshes/l1.stl" />
+    	<mesh name="sawyer_l2"	file="meshes/l2.stl" />
+    	<mesh name="sawyer_l3"	file="meshes/l3.stl" />
+    	<mesh name="sawyer_l4"	file="meshes/l4.stl" />
+    	<mesh name="sawyer_l5"	file="meshes/l5.stl" />
+    	<mesh name="sawyer_l6"	file="meshes/l6.stl" />
+    </asset>
+
+	<asset>
+		<mesh name="sawyer_pedestal" file="meshes/rethink_mount/pedestal.stl" />
+	</asset>
+
+    <asset>
+        <mesh name="electric_gripper_base" file="meshes/rethink_gripper/electric_gripper_base.stl" />
+        <mesh name="standard_narrow" file="meshes/rethink_gripper/standard_narrow.stl" />
+        <mesh name="half_round_tip" file="meshes/rethink_gripper/half_round_tip.stl" />
+        <mesh name="connector_plate" file="meshes/rethink_gripper/connector_plate.stl" />
+    </asset>
+
+	<sensor>
+        <force name="force_ee" site="ft_frame"/>
+        <torque name="torque_ee" site="ft_frame"/>
+    </sensor>
+	
+</mujocoinclude>

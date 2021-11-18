@@ -1,0 +1,11 @@
+<mujocoinclude>    
+    <actuator>
+    	<motor ctrllimited="true" ctrlrange="-80.0 80.0" joint="sawyer_right_j0" name="torq_right_j0"/>
+    	<motor ctrllimited="true" ctrlrange="-80.0 80.0" joint="sawyer_right_j1" name="torq_right_j1"/>
+    	<motor ctrllimited="true" ctrlrange="-40.0 40.0" joint="sawyer_right_j2" name="torq_right_j2"/>
+    	<motor ctrllimited="true" ctrlrange="-40.0 40.0" joint="sawyer_right_j3" name="torq_right_j3"/>
+    	<motor ctrllimited="true" ctrlrange="-9.0 9.0" joint="sawyer_right_j4" name="torq_right_j4"/>
+    	<motor ctrllimited="true" ctrlrange="-9.0 9.0" joint="sawyer_right_j5" name="torq_right_j5"/>
+    	<motor ctrllimited="true" ctrlrange="-9.0 9.0" joint="sawyer_right_j6" name="torq_right_j6"/>
+    </actuator>
+</mujocoinclude>

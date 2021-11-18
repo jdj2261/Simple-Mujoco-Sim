@@ -10,7 +10,7 @@ class JointPositionController(Controller):
         arm_dof=7,
         actuator_range=None,
         kp=50,
-        ki=0,
+        ki=0.1,
         kd=22,
         qpos_limits=None,
     ):

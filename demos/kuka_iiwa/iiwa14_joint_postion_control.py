@@ -31,17 +31,10 @@ def main():
     while True:
         torque = jpos_controller.run_controller(sim, result_qpos)
         sim.data.ctrl[jpos_controller.qpos_index] = torque
-        print(np.round(jpos_controller.err_qpos, 4))
-        if jpos_controller.is_reached():
-            cnt += 1
-            print(f"End Effector Position : {np.round(jpos_controller.eef_pos,4)}")
-            print("Goal reached")
-            time.sleep(1)
+        
+        print(f"Current : {jpos_controller.eef_pos}")
+        print(f"Robot : {iiwa14_robot.forward_kin(jpos_controller.q_pos)[iiwa14_robot.eef_name].pos}")
 
-            if cnt%2 == 1:
-                result_qpos[0] += np.pi/2
-            elif cnt%2 == 0:
-                result_qpos[0] -= np.pi/2
         sim.step()
         viewer.render()
 
