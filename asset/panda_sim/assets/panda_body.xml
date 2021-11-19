@@ -38,12 +38,12 @@
                                         <joint name="panda_joint5" pos="0 0 0" axis="0 0 1" limited="true" range="-2.8973 2.8973" damping="0.1"/>
                                         <geom type="mesh" contype="0" conaffinity="0" group="1" mesh="panda_link5_vis" name="panda_link5_visual" rgba="1 1 1 1" />
                                         <geom type="mesh" group="0" mesh="panda_link5" name="panda_link5_collision"/>
-                                        <body name="panda_link6" pos="0 0 0" quat="0.707107 0.707107 0 0">
+                                        <body name="panda_link6" pos="0 0 0" euler="1.57 0 0">
                                             <inertial pos="0.06 0 0" mass="1.5" diaginertia="0.1 0.1 0.1" />
                                             <joint name="panda_joint6" pos="0 0 0" axis="0 0 1" limited="true" range="-0.0175 3.7525" damping="0.01"/>
                                             <geom type="mesh" contype="0" conaffinity="0" group="1" mesh="panda_link6_vis" name="panda_link6_visual" rgba="1 1 1 1" />
                                             <geom type="mesh" group="0" mesh="panda_link6" name="panda_link6_collision"/>
-                                            <body name="panda_link7" pos="0.088 0 0" quat="0.707107 0.707107 0 0">
+                                            <body name="panda_link7" pos="0.088 0 0" euler="1.57 0 0.7854">
                                                 <inertial pos="0 0 0.08" mass="0.5" diaginertia="0.05 0.05 0.05" />
                                                 <joint name="panda_joint7" pos="0 0 0" axis="0 0 1" limited="true" range="-2.8973 2.8973" damping="0.01"/>
                                                 <geom type="mesh" contype="0" conaffinity="0" group="1" mesh="panda_link7_vis" name="panda_link7_visual" rgba="1. 1. 1. 1." />

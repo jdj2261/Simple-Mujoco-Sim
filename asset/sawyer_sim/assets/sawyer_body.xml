@@ -76,7 +76,7 @@
 													<joint axis="0 0 1" limited="true" name="sawyer_right_j6" pos="0 0 0" range="-4.7124 4.7124" damping="0.1"/>
 													<geom conaffinity="0" contype="0" group="1" mesh="sawyer_l6_vis" type="mesh" name="sawyer_link6_visual" rgba="0.5 0.1 0.1 1"/>
 													<geom type="mesh" group="0" rgba="0.5 0.1 0.1 1" mesh="sawyer_l6_col" name="sawyer_l6_col"/>
-													<body name="sawyer_right_hand" pos="0 0 0.024" quat="0.707105 0 0 0.707108">
+													<body name="sawyer_right_hand" pos="0 0 0.024" quat="1 0 0 0">
 														<!-- This camera points out from the eef. -->
 														<camera mode="fixed" name="sawyer_eye_in_hand" pos="0.05 0 0" quat="0 0.707108 0.707108 0" fovy="75"/>
 														<!-- To add gripper -->

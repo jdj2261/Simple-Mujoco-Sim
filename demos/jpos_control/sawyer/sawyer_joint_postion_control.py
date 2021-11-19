@@ -31,15 +31,6 @@ def main():
         torque = jpos_controller.run_controller(sim, result_qpos)
         sim.data.ctrl[jpos_controller.qpos_index] = torque
 
-        sim.data.ctrl[jpos_controller.gripper_index] = [0.0115, 0.020833]
-        # sim.data.ctrl[jpos_controller.gripper_index] = [0, 0]
-        # for contact in sim.data.contact:
-        #     # geom_name1 = sim.model.geom_id2name(contact.geom1)
-        #     # geom_name2 = sim.model.geom_id2name(contact.geom2)
-            
-        #     # if geom_name1 == "ground" and geom_name2=="ground":
-        #     #     continue
-        #     # print(geom_name1, geom_name2)
 
         # print(sim.data.geom_xpos[sim.model.geom_name2id("coke")])
         # print(f"Current : {jpos_controller.eef_pos}")
@@ -47,7 +38,7 @@ def main():
         # print(f"Robot : {sawyer_robot.forward_kin(cur_qpos)[sawyer_robot.eef_name].pos}")
         # print(np.round(jpos_controller.err_qpos, 4))
 
-        print(sim.data.qpos[jpos_controller.gripper_index])
+        # print(sim.data.qpos[jpos_controller.gripper_index])
         if jpos_controller.is_reached():
             cnt += 1
             print(f"End Effector Position : {np.round(jpos_controller.eef_pos,4)}")

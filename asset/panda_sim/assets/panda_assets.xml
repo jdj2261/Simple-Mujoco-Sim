@@ -29,4 +29,9 @@
         <mesh name="panda_finger_vis" file="meshes/visual/finger_vis.stl" />
         <mesh name="panda_finger_vis2" file="meshes/visual/finger_longer.stl" />
     </asset>
+    
+    <sensor>
+        <force name="force_ee" site="panda_ft_frame"/>
+        <torque name="torque_ee" site="panda_ft_frame"/>
+    </sensor>
 </mujocoinclude>
