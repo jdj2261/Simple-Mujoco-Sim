@@ -11,4 +11,3 @@
   <material name="iiwa14_orange" rgba="1.0 0.423529411765 0.0392156862745 1.0"/>
   <material name="iiwa14_grey" rgba="0.4 0.4 0.4 1.0"/>
 </mujoco>
-

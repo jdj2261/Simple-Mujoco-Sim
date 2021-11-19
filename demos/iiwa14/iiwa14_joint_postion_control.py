@@ -1,7 +1,6 @@
 import numpy as np
-import time
 import sys, os
-import matplotlib.pyplot as plt
+import time
 
 controller_path = os.path.abspath(os.path.abspath(__file__) + "/../../../")
 sys.path.append(controller_path)
@@ -10,19 +9,14 @@ sys.path.append(demo_path)
 
 from mj_controller.joint_pos import JointPositionController
 from common import load_mujoco, load_pykin, get_result_qpos
-from mj_controller.plot import plot_joints
 
 def main():
-    t = 0
-    n_timesteps = int(10/0.002)
-    qlog = np.zeros((n_timesteps, 7))
-
     sim, viewer = load_mujoco("../../asset/iiwa14_sim/iiwa14.xml")
     iiwa14_robot = load_pykin("../../pykin/asset/urdf/iiwa14/iiwa14.urdf")
     iiwa14_robot.setup_link_name("iiwa14_link_0", "iiwa14_link_7")
 
     init_qpos = np.array([0, 0, 0, -1.5708, 0, 1.8675, 0])
-    desired_qpos = np.array([0, np.pi/6, 0.0, -0, 0.0, 0,0.0])
+    desired_qpos = np.array([0, np.pi/2, 0.0, -0, 0.0, 0,0.0])
     transformations = iiwa14_robot.forward_kin(desired_qpos)
     eef_pose = transformations[iiwa14_robot.eef_name].pose
 
@@ -30,20 +24,32 @@ def main():
 
     jpos_controller = JointPositionController(sim=sim, eef_name=iiwa14_robot.eef_name)
     jpos_controller.kp = jpos_controller.nums2array(20, 7)
-    jpos_controller.ki = jpos_controller.nums2array(0.1, 7)
-    jpos_controller.kd = jpos_controller.nums2array(10, 7)
+    cnt = 0
 
-    while t < n_timesteps:
+    while True:
         torque = jpos_controller.run_controller(sim, result_qpos)
         sim.data.ctrl[jpos_controller.qpos_index] = torque
-        qlog[t] = sim.data.qpos[jpos_controller.qpos_index]
-        print(np.round(sim.data.qpos[jpos_controller.qpos_index], 4))
+    
+        print(f"Current : {jpos_controller.eef_pos}")
+        print(f"Robot : {iiwa14_robot.forward_kin(jpos_controller.q_pos)[iiwa14_robot.eef_name].pos}")
 
-        t += 1
+        if jpos_controller.is_reached():
+            cnt += 1
+            print(f"End Effector Position : {np.round(jpos_controller.eef_pos,4)}")
+            print("Goal reached")
+            time.sleep(1)
+    
+            if cnt%4 == 1:
+                result_qpos[0] += np.pi/2
+            elif cnt%4 == 2:
+                result_qpos[1] -= np.pi/2
+            elif cnt%4 == 3:
+                result_qpos[0] -= np.pi/2
+            else:
+                result_qpos[1] += np.pi/2
+
         sim.step()
-        # viewer.render()
-
-    plot_joints(desired_qpos, qlog, jpos_controller, True)
+        viewer.render()
 
 if __name__ == "__main__":
     main()

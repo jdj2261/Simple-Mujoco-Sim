@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 
 <mujoco>
-  <body name="pedestal" pos="0 0 0.95">
+  <body name="pedestal" pos="0 0 0.92">
       <inertial pos="0 0 0" quat="0.659267 -0.259505 -0.260945 0.655692" mass="60.864" diaginertia="6.0869 5.81635 4.20915" />
       <geom class="pedestal_viz" pos="0.26 0.345 -0.91488" quat="0.5 0.5 -0.5 -0.5" type="mesh" contype="0" conaffinity="0" group="1"  mesh="pedestal" />
       <geom class="pedestal_viz" size="0.18 0.31" pos="-0.02 0 -0.29" type="cylinder" rgba="0.2 0.2 0.2 0" />

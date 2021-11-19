@@ -44,8 +44,8 @@ def main():
         #     # print(geom_name1, geom_name2)
 
         # print(sim.data.geom_xpos[sim.model.geom_name2id("coke")])
-        # print(f"Current : {jpos_controller.eef_pos}")
-        # print(f"Robot : {panda_robot.forward_kin(jpos_controller.q_pos)[panda_robot.eef_name].pos}")
+        print(f"Current : {jpos_controller.eef_pos}")
+        print(f"Robot : {panda_robot.forward_kin(jpos_controller.q_pos)[panda_robot.eef_name].pos}")
         # print(np.round(jpos_controller.err_qpos, 4))
 
         if not is_grasp:

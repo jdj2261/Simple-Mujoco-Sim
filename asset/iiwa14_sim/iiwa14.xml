@@ -2,7 +2,6 @@
 
 <mujoco>
   <compiler angle="radian" coordinate="local" meshdir="meshes/"/>
-  <include file="kuka/basic_scene.xml"/>
   <default>
     <joint damping="0.5"/>
     <default class="pedestal_viz">
@@ -18,20 +17,23 @@
   </default>
 
   <asset>
-    <include file="kuka/iiwa14_dependencies.xml"/>
+    <include file="assets/iiwa14_assets.xml"/>
     <texture type="skybox" builtin="gradient" rgb1="1 1 1" rgb2=".6 .8 1" width="256" height="256"/>
   </asset>
+
+ <!-- arenta -->
+  <include file="../../asset/common_arena/pegs_arena.xml"/>
 
   <worldbody>
     <!-- <light pos="0 0 1000" castshadow="false"/> -->
     <!-- <geom class="collision" type="plane" size="10 10 1" rgba=".8 .8 .8 1"/> -->
     <body name="iiwa14_base" pos="0 0 0">
-        <include file="kuka/iiwa14_chain.xml"/>
+        <include file="assets/iiwa14_body.xml"/>
     </body>
   </worldbody>
 
   <actuator>
-    <include file="kuka/iiwa14_joint_tor_act.xml"/>
+    <include file="assets/iiwa14_arm_motor_actuator.xml"/>
   </actuator>
 
   <!-- <sensor>

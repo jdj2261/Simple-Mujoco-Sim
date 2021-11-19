@@ -7,7 +7,7 @@
             <body name="panda_pedestal" pos="0 0 0.92">
                 <inertial diaginertia="6.0869 5.81635 4.20915" mass="60.864" pos="0 0 0" quat="0.659267 -0.259505 -0.260945 0.655692"/>
                 <geom conaffinity="0" contype="0" group="1" mesh="panda_pedestal" type="mesh" name="pedestal_vis" rgba="0.2 0.2 0.2 1" />
-                <geom pos="-0.02 0 -0.29" rgba="0.2 0.2 0.2 1" size="0.18 0.31" type="cylinder" name="pedestal_col"/>
+                <!-- <geom pos="-0.02 0 -0.29" rgba="0.2 0.2 0.2 1" size="0.18 0.31" type="cylinder" name="pedestal_col"/> -->
             <!-- mount attached here -->
                 <body name="panda_link0" pos="0 0 0">
                     <inertial pos="0 0 0.05" mass="4" diaginertia="0.4 0.4 0.4" />
