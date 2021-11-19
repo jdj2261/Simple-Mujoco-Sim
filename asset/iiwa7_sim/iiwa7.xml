@@ -19,5 +19,5 @@
     <include file="assets/iiwa7_arm_motor_actuator.xml"/>
 
     <!-- iiwa7 gripper actuator-->
-    <!-- <include file="assets/iiwa7_gripper_position_actuator.xml"/> -->
+    <include file="assets/iiwa7_gripper_position_actuator.xml"/>
 </mujoco>

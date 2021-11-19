@@ -2,17 +2,17 @@ import numpy as np
 import sys, os
 import time
 
-controller_path = os.path.abspath(os.path.abspath(__file__) + "/../../../")
+controller_path = os.path.abspath(os.path.abspath(__file__) + "/../../../../")
 sys.path.append(controller_path)
-demo_path = os.path.abspath(os.path.abspath(__file__) + "/../../")
+demo_path = os.path.abspath(os.path.abspath(__file__) + "/../../../")
 sys.path.append(demo_path)
 
 from mj_controller.joint_pos import JointPositionController
 from common import load_mujoco, load_pykin, get_result_qpos
 
 def main():
-    sim, viewer = load_mujoco("../../asset/iiwa7_sim/iiwa7.xml")
-    iiwa7_robot = load_pykin("../../pykin/asset/urdf/iiwa7/iiwa7.urdf")
+    sim, viewer = load_mujoco("../../../asset/iiwa7_sim/iiwa7.xml")
+    iiwa7_robot = load_pykin("../../../pykin/asset/urdf/iiwa7/iiwa7.urdf")
     iiwa7_robot.setup_link_name("iiwa7_link_0", "iiwa7_link_7")
 
     init_qpos = np.array([0, 0, 0, -1.5708, 0, 1.8675, 0])
@@ -29,7 +29,8 @@ def main():
     while True:
         torque = jpos_controller.run_controller(sim, result_qpos)
         sim.data.ctrl[jpos_controller.qpos_index] = torque
-    
+        sim.data.ctrl[jpos_controller.gripper_index] = [0.5, -0.5]
+
         print(f"Current : {jpos_controller.eef_pos}")
         print(f"Robot : {iiwa7_robot.forward_kin(jpos_controller.q_pos)[iiwa7_robot.eef_name].pos}")
 

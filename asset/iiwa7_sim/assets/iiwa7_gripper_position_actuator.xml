@@ -1,0 +1,6 @@
+<mujocoinclude>
+    <actuator>
+        <position ctrllimited="true" kp="20" joint='finger_joint' name='iiwa7_finger_1' ctrlrange='0 0.7'/>
+        <position ctrllimited="true" kp="20" joint='right_outer_knuckle_joint'  name='iiwa7_finger_2'  ctrlrange='-0.7 0'/>
+    </actuator>
+</mujocoinclude>  

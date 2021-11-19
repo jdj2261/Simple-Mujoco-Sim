@@ -2,17 +2,17 @@ import numpy as np
 import sys, os
 import time
 
-controller_path = os.path.abspath(os.path.abspath(__file__) + "/../../../")
+controller_path = os.path.abspath(os.path.abspath(__file__) + "/../../../../")
 sys.path.append(controller_path)
-demo_path = os.path.abspath(os.path.abspath(__file__) + "/../../")
+demo_path = os.path.abspath(os.path.abspath(__file__) + "/../../../")
 sys.path.append(demo_path)
 
 from mj_controller.joint_pos import JointPositionController
 from common import load_mujoco, load_pykin, get_result_qpos
 
 def main():
-    sim, viewer = load_mujoco("../../asset/sawyer_sim/sawyer.xml")
-    sawyer_robot = load_pykin("../../pykin/asset/urdf/sawyer/sawyer.urdf")
+    sim, viewer = load_mujoco("../../../asset/sawyer_sim/sawyer.xml")
+    sawyer_robot = load_pykin("../../../pykin/asset/urdf/sawyer/sawyer.urdf")
     sawyer_robot.setup_link_name("sawyer_base", "sawyer_right_l6")
 
     print(sawyer_robot.active_joint_names)
