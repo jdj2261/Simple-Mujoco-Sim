@@ -12,7 +12,7 @@ from common import load_mujoco, load_pykin, get_result_qpos
 
 
 def main():
-    sim, viewer = load_mujoco("../../../asset/franka_sim/franka_panda.xml")
+    sim, viewer = load_mujoco("../../../asset/panda_sim/franka_panda.xml")
     panda_robot = load_pykin('../../../pykin/asset/urdf/panda/panda.urdf')
     panda_robot.setup_link_name("panda_link0", "panda_link7")
 
@@ -23,11 +23,7 @@ def main():
 
     result_qpos = get_result_qpos(panda_robot, init_qpos, eef_pose)
 
-    jpos_controller = JointPositionController(sim=sim, eef_name=panda_robot.eef_name)
-    jpos_controller.kp = np.array([4000, 2500, 4000, 2500, 2500, 2500, 4000])
-    jpos_controller.ki = np.array([8,   8, 10, 8, 8, 8, 8])
-    jpos_controller.kd = np.array([100, 100, 100, 100, 100, 100, 100])
-
+    jpos_controller = JointPositionController(sim=sim, eef_name=panda_robot.eef_name, kp=30)
     is_reached = False
 
     while True:
@@ -35,14 +31,14 @@ def main():
         if not is_reached:
             torque = jpos_controller.run_controller(sim, result_qpos)
             sim.data.ctrl[jpos_controller.qpos_index] = torque
-            sim.data.ctrl[jpos_controller.gripper_index] = [0.4, 0.4]
+            sim.data.ctrl[jpos_controller.gripper_index] = [0.4, -0.4]
             
             if jpos_controller.is_reached():
                 is_reached = True
                 print("is_reached")
         
         if is_reached:
-            torque = jpos_controller.run_controller(sim, [np.pi/1.5, np.pi/6, 0.0, -np.pi/2, 0.0, np.pi*5/8,0.0])
+            torque = jpos_controller.run_controller(sim, [np.pi/2, np.pi/6, 0.0, -np.pi/2, 0.0, np.pi*5/8,0.0])
             sim.data.ctrl[jpos_controller.qpos_index] = torque
             sim.data.ctrl[jpos_controller.gripper_index] = [0.0, 0.0]
 
