@@ -76,7 +76,7 @@ Demo is only available in Mujoco 2.0 version. It will be updated to version 2.1 
 
 - Install pykin
 
-  You need a python-fcl(https://github.com/BerkeleyAutomation/python-fcl) package to check collsion.
+  You need a [fcl](https://github.com/flexible-collision-library/fcl.git) library to check collsion.
 
   - in mac
 
@@ -126,6 +126,7 @@ Demo is only available in Mujoco 2.0 version. It will be updated to version 2.1 
 ~~~
 $ cd ~/
 $ git clone https://github.com/jdj2261/MuJoCo-Manipulation-Demo.git
+
 ## For use URDF
 $ git clone --recurse-submodules https://github.com/jdj2261/pykin.git
 $ cd MuJoCo-Manipulation-Demo
