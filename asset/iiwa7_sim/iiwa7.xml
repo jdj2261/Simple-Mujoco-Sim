@@ -1,0 +1,23 @@
+<mujoco model='iiwa7'>
+    <compiler angle="radian" meshdir="" inertiagrouprange="0 0"/>
+    <option impratio="20" cone="elliptic" density="1.2" viscosity="0.00002"/>
+    <size nconmax="5000" njmax="5000"/>
+
+    <!-- iiwa7 assets-->
+    <include file="assets/iiwa7_assets.xml"/>
+    
+    <!-- arenta -->
+    <include file="../../asset/common_arena/empty_arena.xml"/>
+
+    <!-- objects -->
+    <include file="assets/iiwa7_objects.xml"/>
+    
+    <!-- iiwa7 mujoco xml-->
+    <include file="assets/iiwa7_body.xml"/>
+
+    <!-- iiwa7 arm actuator-->
+    <include file="assets/iiwa7_arm_motor_actuator.xml"/>
+
+    <!-- iiwa7 gripper actuator-->
+    <!-- <include file="assets/iiwa7_gripper_position_actuator.xml"/> -->
+</mujoco>

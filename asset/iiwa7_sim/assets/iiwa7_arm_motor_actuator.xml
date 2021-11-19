@@ -1,0 +1,13 @@
+<mujocoinclude>
+    <actuator>
+        <!-- Physical limits of the actuator. -->
+        <!-- Values taken from kuka_lbr_iiwa_brochure_en.pdf (see website) -->
+        <motor ctrllimited="true" ctrlrange="-176.0 176.0" joint="iiwa7_joint_1" name="iiwa7_torq_j1"/>
+        <motor ctrllimited="true" ctrlrange="-176.0 176.0" joint="iiwa7_joint_2" name="iiwa7_torq_j2"/>
+        <motor ctrllimited="true" ctrlrange="-110.0 110.0" joint="iiwa7_joint_3" name="iiwa7_torq_j3"/>
+        <motor ctrllimited="true" ctrlrange="-110.0 110.0" joint="iiwa7_joint_4" name="iiwa7_torq_j4"/>
+        <motor ctrllimited="true" ctrlrange="-110.0 110.0" joint="iiwa7_joint_5" name="iiwa7_torq_j5"/>
+        <motor ctrllimited="true" ctrlrange="-40.0 40.0" joint="iiwa7_joint_6" name="iiwa7_torq_j6"/>
+        <motor ctrllimited="true" ctrlrange="-40.0 40.0" joint="iiwa7_joint_7" name="iiwa7_torq_j7"/>
+    </actuator>
+</mujocoinclude>
