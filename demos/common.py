@@ -1,5 +1,5 @@
 import sys, os
-
+import numpy as np
 from mujoco_py import MjSim, MjViewer, load_model_from_path
 pykin_path = os.path.abspath(os.path.dirname(__file__) + "/../" + "pykin")
 sys.path.append(pykin_path)
@@ -20,6 +20,6 @@ def load_pykin(path):
 def get_result_qpos(robot, init_qpos, eef_pos):
     is_limit_qpos = False
     while not is_limit_qpos:
-        result_qpos = robot.inverse_kin(init_qpos, eef_pos, method="LM")
+        result_qpos = robot.inverse_kin(np.random.randn(7), eef_pos, method="LM")
         is_limit_qpos = robot.check_limit_joint(result_qpos)
     return robot.inverse_kin(init_qpos, eef_pos, method="LM")
