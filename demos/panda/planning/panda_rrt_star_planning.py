@@ -60,7 +60,7 @@ def main():
     #     gparam=trimesh.load_mesh(controller_path+"/asset/common_objects/meshes/milk.stl"), 
     #     transform=sim.data.geom_xpos[sim.model.geom_name2id("milk")])
 
-    obstacle_safety = 3
+    obstacle_safety = 2
     o_manager.add_object(
         "1_frame",
         gtype="cylinder", 
@@ -98,10 +98,10 @@ def main():
         robot=panda_robot,
         self_collision_manager=c_manager,
         obstacle_collision_manager=o_manager,
-        delta_distance=0.1,
+        delta_distance=0.3,
         epsilon=0.2, 
         max_iter=1000,
-        gamma_RRT_star=10,
+        gamma_RRT_star=3,
         dimension=7
     )
     # print(sim.data.geom_xpos[sim.model.geom_name2id("r_frame")])
@@ -113,7 +113,7 @@ def main():
 
     is_get_path = False
     if not is_get_path:
-        for _ in range(20000):
+        while True:
             # print(result_qpos)
             torque = jpos_controller.run_controller(sim, result_qpos)
             sim.data.ctrl[jpos_controller.qpos_index] = torque
@@ -127,10 +127,13 @@ def main():
 
     time.sleep(3)
     if not is_get_path:
-        joint_path, is_get_path = rrt_planner.get_path_in_joinst_space(
+        joint_path = rrt_planner.get_path_in_joinst_space(
             cur_q=jpos_controller.joint_pos, 
             goal_pose=target_eef_pose,
             resolution=1)
+        
+        if joint_path is not None:
+            is_get_path = True
         
     if is_get_path:
         for i, joint in enumerate(joint_path):
@@ -152,6 +155,7 @@ def main():
                 sim.data.ctrl[jpos_controller.qpos_index] = torque
                 sim.step()
                 viewer.render()
+
     last_qpos = joint_path[-1]
     while True:
         if jpos_controller.is_reached():

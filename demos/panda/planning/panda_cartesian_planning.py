@@ -23,7 +23,6 @@ def main():
     panda_robot = load_pykin('../../../pykin/asset/urdf/panda/panda.urdf')
     panda_robot.setup_link_name("panda_link0", "panda_link7")
 
-
     ####
     # model = mp.from_file(controller_path+"/asset/panda_sim/assets/panda_objects.xml", model_dir=controller_path+"/asset/common_objects/")
     # # model = mp.from_file('test/humanoid.xml')
@@ -38,23 +37,15 @@ def main():
     ####
 
     init_qpos = np.array([0, 0.1963495375, 0.00, -2.616, 0.00, 2.9415926, 0.78539815])
-
-    desired_qpos = np.array([0.0, np.pi/6, 0.0, -np.pi*12/24, 0.0, np.pi*5/8,0.0])
-    transformations = panda_robot.forward_kin(desired_qpos)
-    eef_pose = transformations[panda_robot.eef_name].pose
-    # print(eef_pose)
-    
-    # result_qpos = get_result_qpos(panda_robot, init_qpos, eef_pose)
-#     eef_pose = [6.90497999e-01, 6.46230726e-13 ,1.35337482e+00 ,3.22863958e-12,
-#  9.46929834e-01, 2.10759188e-12 ,3.21440335e-01]
-
-#     target_eef_pose = [6.90497999e-01, -0.3, 1.35337482e+00, 3.22863958e-12,
-#  9.46929834e-01, 2.10759188e-12, 3.21440335e-01]
+    eef_pose = [0.65, 0.3464,  1.17,  -0.025,  0.778,  0.597, -0.193,]
     result_qpos = get_result_qpos(panda_robot, init_qpos, eef_pose)
+    target_eef_pose = [0.65, 0.3464,  1.47,  -0.025,  0.778,  0.597, -0.193]
+    target_eef_pose1 = [0.65, -0.3464,  1.47,  -0.025,  0.778,  0.597, -0.193]
+    target_eef_pose2 = [0.65, -0.3464,  1.17,  -0.025,  0.778,  0.597, -0.193]
 
     jpos_controller = JointPositionController(sim=sim, eef_name=panda_robot.eef_name)
     jpos_controller.kp = 20
-    # print(sim.model.geom_names)
+    # # print(sim.model.geom_names)
 
     task_plan = CartesianPlanner(
         panda_robot, 
@@ -63,36 +54,105 @@ def main():
         n_step=1000,
         dimension=7)
 
-    is_get_path = False
-    while True:
-        if not is_get_path:
+    is_get_path = [False, True, True]
+
+    if not is_get_path[0]:
+        while True:
             torque = jpos_controller.run_controller(sim, result_qpos)
             sim.data.ctrl[jpos_controller.qpos_index] = torque
             sim.step()
             viewer.render()
-        # if jpos_controller.is_reached() and not is_get_path:
-        #     joint_path, is_get_path, target_poses = task_plan.get_path_in_joinst_space(
-        #         current_q=jpos_controller.joint_pos,
-        #         goal_pose=target_eef_pose,
-        #         resolution=0.01, 
-        #         damping=0.03,
-        #         pos_sensitivity=0.04,
-        #         is_slerp=False)
 
-        #     if is_get_path:        
-        #         for joint in joint_path:
-        #             torque = jpos_controller.run_controller(sim, joint)
-        #             sim.data.ctrl[jpos_controller.qpos_index] = torque
-        #             sim.step()
-        #             viewer.render()
-        #     last_qpos = joint_path[-1]
+            if jpos_controller.is_reached():
+                print("reached")
+                break
+
+    if jpos_controller.is_reached() and not is_get_path[0]:
+        jpos_controller.kp = 50
+        joint_path, _ = task_plan.get_path_in_joinst_space(
+            current_q=jpos_controller.joint_pos,
+            goal_pose=target_eef_pose,
+            resolution=0.001, 
+            damping=0.03,
+            pos_sensitivity=0.04,
+            is_slerp=True)
         
-        # if is_get_path:
-        #     torque = jpos_controller.run_controller(sim, last_qpos)
-        #     sim.data.ctrl[jpos_controller.qpos_index] = torque
+        if joint_path is not None:
+            is_get_path[0] = True
+            is_get_path[1] = False
 
-        #     sim.step()
-        #     viewer.render()
+    if is_get_path[0]:        
+        for i, joint in enumerate(joint_path):
+            while True:
+                torque = jpos_controller.run_controller(sim, joint)
+                sim.data.ctrl[jpos_controller.qpos_index] = torque
+                sim.step()
+                viewer.render()
+
+                if jpos_controller.is_reached():
+                    print("reach")
+                    print(f"{i+1}/{len(joint_path)}")
+                    break
+
+    if jpos_controller.is_reached() and not is_get_path[1]:
+        joint_path, _ = task_plan.get_path_in_joinst_space(
+            current_q=jpos_controller.joint_pos,
+            goal_pose=target_eef_pose1,
+            resolution=0.002, 
+            damping=0.03,
+            pos_sensitivity=0.04,
+            is_slerp=True)
+        
+        if joint_path is not None:
+            is_get_path[1] = True
+            is_get_path[2] = False
+
+    if is_get_path[1]:        
+        for i, joint in enumerate(joint_path):
+            while True:
+                torque = jpos_controller.run_controller(sim, joint)
+                sim.data.ctrl[jpos_controller.qpos_index] = torque
+                sim.step()
+                viewer.render()
+
+                if jpos_controller.is_reached():
+                    print("reach")
+                    print(f"{i+1}/{len(joint_path)}")
+                    break
+
+    if jpos_controller.is_reached() and not is_get_path[2]:
+        joint_path, _ = task_plan.get_path_in_joinst_space(
+            current_q=jpos_controller.joint_pos,
+            goal_pose=target_eef_pose2,
+            resolution=0.001, 
+            damping=0.03,
+            pos_sensitivity=0.04,
+            is_slerp=False)
+        
+        if joint_path is not None:
+            is_get_path[2] = True
+
+    if is_get_path[2]:        
+        for i, joint in enumerate(joint_path):
+            while True:
+                torque = jpos_controller.run_controller(sim, joint)
+                sim.data.ctrl[jpos_controller.qpos_index] = torque
+                sim.step()
+                viewer.render()
+
+                if jpos_controller.is_reached():
+                    print("reach")
+                    print(f"{i+1}/{len(joint_path)}")
+                    break
+
+    last_qpos = joint_path[-1]
+    while True:
+        if jpos_controller.is_reached():
+            torque = jpos_controller.run_controller(sim, last_qpos)
+            sim.data.ctrl[jpos_controller.qpos_index] = torque
+
+            sim.step()
+            viewer.render()
 
 if __name__ == "__main__":
     main()
