@@ -24,7 +24,7 @@ def main():
     result_qpos = get_result_qpos(panda_robot, init_qpos, eef_pose)
 
     jpos_controller = JointPositionController(sim=sim, eef_name=panda_robot.eef_name)
-    jpos_controller.kp = 20
+    jpos_controller.kp = 50
     # print(sim.model.geom_names)
 
     cnt = 0
@@ -33,7 +33,7 @@ def main():
     while True:
         torque = jpos_controller.run_controller(sim, result_qpos)
         sim.data.ctrl[jpos_controller.qpos_index] = torque
-        sim.data.ctrl[jpos_controller.gripper_index] = [0.4, 0.4]
+        # sim.data.ctrl[jpos_controller.gripper_index] = [0.4, 0.4]
 
         # for contact in sim.data.contact:
         #     # geom_name1 = sim.model.geom_id2name(contact.geom1)
@@ -48,8 +48,8 @@ def main():
         print(f"Robot : {panda_robot.forward_kin(jpos_controller.q_pos)[panda_robot.eef_name].pos}")
         # print(np.round(jpos_controller.err_qpos, 4))
 
-        if not is_grasp:
-            sim.data.ctrl[jpos_controller.gripper_index] = [0.4, 0.4]
+        # if not is_grasp:
+        #     sim.data.ctrl[jpos_controller.gripper_index] = [0.4, 0.4]
         
         if jpos_controller.is_reached():
             cnt += 1
