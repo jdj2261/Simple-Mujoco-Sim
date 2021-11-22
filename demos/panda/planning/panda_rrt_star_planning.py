@@ -36,15 +36,15 @@ def main():
     panda_robot.setup_link_name("panda_link0", "panda_link7")
 
     init_qpos = np.array([0 , 0, 0, -1.5708, 0, 1.8675, 0])
-    desired_qpos = np.array([np.pi/6, np.pi/6, 0.0, -np.pi*12/24, 0.0, np.pi*5/8,0.0])
+    desired_qpos = np.array([np.pi/6, np.pi/4, 0.0, -np.pi/2, 0.0, np.pi*5/8,0.0])
     transformations = panda_robot.forward_kin(desired_qpos)
     eef_pose = transformations[panda_robot.eef_name].pose
-    target_eef_pose = [0.5979,  -0.345249, 1.35337482, -0.00853688,  0.79165415,  0.60745875, -0.06484359]
+    target_eef_pose = [0.5979,  -0.345249, 1.25337482, -0.00853688,  0.79165415,  0.60745875, -0.06484359]
 
     result_qpos = get_result_qpos(panda_robot, init_qpos, eef_pose)
 
     jpos_controller = JointPositionController(sim=sim, eef_name=panda_robot.eef_name)
-    jpos_controller.kp = 50
+    jpos_controller.kp = 30
     # jpos_controller.kd = 2
 
     mesh_path = pykin_path+"/asset/urdf/panda/"
@@ -60,51 +60,45 @@ def main():
     #     gparam=trimesh.load_mesh(controller_path+"/asset/common_objects/meshes/milk.stl"), 
     #     transform=sim.data.geom_xpos[sim.model.geom_name2id("milk")])
 
-    obstacle_safety = np.array([0.05, 0.12, 0])
+    obstacle_safety = 3
     o_manager.add_object(
         "1_frame",
         gtype="cylinder", 
-        gparam=sim.model.geom_size[sim.model.geom_name2id("1_frame")] + obstacle_safety, 
+        gparam=sim.model.geom_size[sim.model.geom_name2id("1_frame")] * obstacle_safety, 
         transform=sim.data.geom_xpos[sim.model.geom_name2id("1_frame")])
-
-    print(sim.model.geom_size[sim.model.geom_name2id("1_frame")] + obstacle_safety)
 
     o_manager.add_object(
         "2_frame",
         gtype="cylinder", 
-        gparam=sim.model.geom_size[sim.model.geom_name2id("2_frame")] + obstacle_safety, 
+        gparam=sim.model.geom_size[sim.model.geom_name2id("2_frame")] * obstacle_safety, 
         transform=sim.data.geom_xpos[sim.model.geom_name2id("2_frame")])
 
     o_manager.add_object(
         "3_frame",
         gtype="cylinder", 
-        gparam=sim.model.geom_size[sim.model.geom_name2id("3_frame")] + obstacle_safety, 
+        gparam=sim.model.geom_size[sim.model.geom_name2id("3_frame")] * obstacle_safety, 
         transform=sim.data.geom_xpos[sim.model.geom_name2id("3_frame")])
 
     o_manager.add_object(
         "4_frame",
         gtype="cylinder", 
-        gparam=sim.model.geom_size[sim.model.geom_name2id("4_frame")] + obstacle_safety, 
+        gparam=sim.model.geom_size[sim.model.geom_name2id("4_frame")] * obstacle_safety, 
         transform=sim.data.geom_xpos[sim.model.geom_name2id("4_frame")])
 
     o_manager.add_object(
         "5_frame",
         gtype="cylinder", 
-        gparam=sim.model.geom_size[sim.model.geom_name2id("5_frame")] + obstacle_safety, 
+        gparam=sim.model.geom_size[sim.model.geom_name2id("5_frame")] * obstacle_safety, 
         transform=sim.data.geom_xpos[sim.model.geom_name2id("5_frame")])
-
-    # result = c_manager.get_distances_other(o_manager)
-    # print(result)
-
-
-    # test, name, data = c_manager.in_collision_other(o_manager, True, True)
-    # print(test, name)
+    
+    # print(sim.model.geom_size[sim.model.geom_name2id("5_frame")] * obstacle_safety)
+    # print(sim.data.geom_xpos[sim.model.geom_name2id("5_frame")])
 
     rrt_planner = RRTStarPlanner(
         robot=panda_robot,
         self_collision_manager=c_manager,
         obstacle_collision_manager=o_manager,
-        delta_distance=0.3,
+        delta_distance=0.1,
         epsilon=0.2, 
         max_iter=1000,
         gamma_RRT_star=10,
@@ -131,6 +125,7 @@ def main():
                 print("reached")
                 break
 
+    time.sleep(3)
     if not is_get_path:
         joint_path, is_get_path = rrt_planner.get_path_in_joinst_space(
             cur_q=jpos_controller.joint_pos, 
@@ -142,11 +137,11 @@ def main():
             while True:
                 # print(jpos_controller.time_step)
                 print(f"{i}/{len(joint_path)}")
-                jpos_controller.kp = 40
+                jpos_controller.kp = 50
                 # jpos_controller.ki = 0.2
                 # jpos_controller.kd = 10.22
                 torque = jpos_controller.run_controller(sim, joint)
-                print(sim.data.body_xpos[sim.model.body_name2id("panda_leftfinger")], panda_robot.forward_kin(jpos_controller.q_pos)["panda_leftfinger"].pos)
+                # print(sim.data.body_xpos[sim.model.body_name2id("panda_leftfinger")], panda_robot.forward_kin(jpos_controller.q_pos)["panda_leftfinger"].pos)
                 
                 if jpos_controller.is_reached():
                     print("reach")
