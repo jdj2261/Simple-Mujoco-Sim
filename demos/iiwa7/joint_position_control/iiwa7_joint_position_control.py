@@ -16,7 +16,7 @@ def main():
     iiwa7_robot.setup_link_name("iiwa7_link_0", "iiwa7_link_7")
 
     init_qpos = np.array([0, 0, 0, -1.5708, 0, 1.8675, 0])
-    desired_qpos = np.array([0, np.pi/2, 0.0, -0, 0.0, 0,0.0])
+    desired_qpos = np.array([0, np.pi/2, 0.0, 0, 0.0, 0,0.0])
     transformations = iiwa7_robot.forward_kin(desired_qpos)
     eef_pose = transformations[iiwa7_robot.eef_name].pose
 

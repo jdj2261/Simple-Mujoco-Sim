@@ -1,26 +1,18 @@
 import numpy as np
-import time
-import sys, os
+import os, sys
+# import mjcf_parser as mp
 
-controller_path = os.path.abspath(os.path.abspath(__file__) + "/../../../../")
-sys.path.append(controller_path)
-demo_path = os.path.abspath(os.path.abspath(__file__) + "/../../../")
-sys.path.append(demo_path)
-
-pykin_path = os.path.abspath(os.path.dirname(__file__) + "/../../../../" + "pykin")
-sys.path.append(pykin_path)
-
+panda_dir = os.path.dirname(os.getcwd())
+parent_path = panda_dir + "/../../"
+sys.path.append(parent_path)
 from mj_controller.joint_pos import JointPositionController
-import mjcf_parser as mp
-from common import load_mujoco, load_pykin, get_result_qpos
+
+from demos.common import load_mujoco, load_pykin, get_result_qpos
 from pykin.planners.cartesian_planner import CartesianPlanner
-from pykin.collision.collision_manager import CollisionManager
-from pykin.utils.transform_utils import change_to_pose
-from pykin.utils.collision_utils import apply_robot_to_collision_manager
 
 def main():
-    sim, viewer = load_mujoco("../../../asset/panda_sim/franka_panda.xml")
-    panda_robot = load_pykin('../../../pykin/asset/urdf/panda/panda.urdf')
+    sim, viewer = load_mujoco(parent_path + "asset/panda_sim/franka_panda.xml")
+    panda_robot = load_pykin(parent_path + 'pykin/asset/urdf/panda/panda.urdf')
     panda_robot.setup_link_name("panda_link0", "panda_link7")
 
     ####
@@ -75,7 +67,7 @@ def main():
             resolution=0.001, 
             damping=0.03,
             pos_sensitivity=0.04,
-            is_slerp=True)
+            is_slerp=False)
         
         if joint_path is not None:
             is_get_path[0] = True
@@ -101,7 +93,7 @@ def main():
             resolution=0.002, 
             damping=0.03,
             pos_sensitivity=0.04,
-            is_slerp=True)
+            is_slerp=False)
         
         if joint_path is not None:
             is_get_path[1] = True

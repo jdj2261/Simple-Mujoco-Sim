@@ -11,7 +11,6 @@ from mj_controller.joint_pos import JointPositionController
 from common import load_mujoco, load_pykin, get_result_qpos
 
 def main():
-    # sim, viewer = load_mujoco("../../asset/franka_sim/assets/franka_chain_test.xml")
     sim, viewer = load_mujoco("../../../asset/panda_sim/franka_panda.xml")
     panda_robot = load_pykin('../../../pykin/asset/urdf/panda/panda.urdf')
     panda_robot.setup_link_name("panda_link0", "panda_link7")
@@ -24,7 +23,7 @@ def main():
     result_qpos = get_result_qpos(panda_robot, init_qpos, eef_pose)
 
     jpos_controller = JointPositionController(sim=sim, eef_name=panda_robot.eef_name)
-    jpos_controller.kp = 50
+    jpos_controller.kp = 30
     # print(sim.model.geom_names)
 
     cnt = 0
@@ -44,8 +43,8 @@ def main():
         #     # print(geom_name1, geom_name2)
 
         # print(sim.data.geom_xpos[sim.model.geom_name2id("coke")])
-        print(f"Current : {jpos_controller.eef_pos}")
-        print(f"Robot : {panda_robot.forward_kin(jpos_controller.q_pos)[panda_robot.eef_name].pos}")
+        # print(f"Current : {jpos_controller.eef_pos}")
+        # print(f"Robot : {panda_robot.forward_kin(jpos_controller.q_pos)[panda_robot.eef_name].pos}")
         # print(np.round(jpos_controller.err_qpos, 4))
 
         # if not is_grasp:

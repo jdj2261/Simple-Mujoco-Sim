@@ -18,7 +18,7 @@ def main():
     print(sawyer_robot.active_joint_names)
 
     init_qpos = np.array([0, 0, 0, -1.5708, 0, 1.8675, 0])
-    desired_qpos = np.array([0, 0, np.pi/6, 0.0, -np.pi/2, 0.0, np.pi*5/8,0.0])
+    desired_qpos = np.array([0, 0, np.pi/6, 0.0, -np.pi/2, 0.0, np.pi*5/8, 0.0])
     transformations = sawyer_robot.forward_kin(desired_qpos)
     eef_pose = transformations[sawyer_robot.eef_name].pose
 

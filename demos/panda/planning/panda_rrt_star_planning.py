@@ -1,24 +1,18 @@
 import numpy as np
 import time
-import sys, os
+import os, sys
 
-controller_path = os.path.abspath(os.path.abspath(__file__) + "/../../../../")
-sys.path.append(controller_path)
-demo_path = os.path.abspath(os.path.abspath(__file__) + "/../../../")
-sys.path.append(demo_path)
-pykin_path = os.path.abspath(os.path.dirname(__file__) + "/../../../" + "pykin")
-sys.path.append(pykin_path)
+panda_dir = os.path.dirname(os.getcwd())
+parent_path = panda_dir + "/../../"
+sys.path.append(parent_path)
 
 from mj_controller.joint_pos import JointPositionController
-from common import load_mujoco, load_pykin, get_result_qpos
+from demos.common import load_mujoco, load_pykin, get_result_qpos
 from pykin.planners.rrt_star_planner import RRTStarPlanner
 from pykin.collision.collision_manager import CollisionManager
-from pykin.utils.transform_utils import change_to_pose
 from pykin.utils.collision_utils import apply_robot_to_collision_manager
-from pykin.utils.obstacle_utils import Obstacle
-import trimesh
 
-
+# TODO
 """
 mjGEOM_PLANE        = 0,        # plane
 mjGEOM_HFIELD,                  # height field
@@ -31,8 +25,8 @@ mjGEOM_MESH,                    # mesh
 """
 
 def main():
-    sim, viewer = load_mujoco("../../../asset/panda_sim/franka_panda.xml")
-    panda_robot = load_pykin('../../../pykin/asset/urdf/panda/panda.urdf')
+    sim, viewer = load_mujoco(parent_path + "asset/panda_sim/franka_panda.xml")
+    panda_robot = load_pykin(parent_path + 'pykin/asset/urdf/panda/panda.urdf')
     panda_robot.setup_link_name("panda_link0", "panda_link7")
 
     init_qpos = np.array([0 , 0, 0, -1.5708, 0, 1.8675, 0])
@@ -45,20 +39,13 @@ def main():
 
     jpos_controller = JointPositionController(sim=sim, eef_name=panda_robot.eef_name)
     jpos_controller.kp = 30
-    # jpos_controller.kd = 2
 
-    mesh_path = pykin_path+"/asset/urdf/panda/"
+    mesh_path = parent_path+"pykin/asset/urdf/panda/"
     c_manager = CollisionManager(mesh_path)
     c_manager.filter_contact_names(panda_robot, panda_robot.forward_kin(jpos_controller.joint_pos))
     c_manager = apply_robot_to_collision_manager(c_manager, panda_robot, panda_robot.forward_kin(jpos_controller.joint_pos))
 
     o_manager = CollisionManager()
-
-    # o_manager.add_object(
-    #     "milk",
-    #     gtype="mesh", 
-    #     gparam=trimesh.load_mesh(controller_path+"/asset/common_objects/meshes/milk.stl"), 
-    #     transform=sim.data.geom_xpos[sim.model.geom_name2id("milk")])
 
     obstacle_safety = 2
     o_manager.add_object(
@@ -98,7 +85,7 @@ def main():
         robot=panda_robot,
         self_collision_manager=c_manager,
         obstacle_collision_manager=o_manager,
-        delta_distance=0.3,
+        delta_distance=0.5,
         epsilon=0.2, 
         max_iter=1000,
         gamma_RRT_star=3,
@@ -120,12 +107,12 @@ def main():
             # print(jpos_controller.time_step)
             sim.step()
             viewer.render()
-
+            
             if jpos_controller.is_reached():
                 print("reached")
+                time.sleep(3)
                 break
 
-    time.sleep(3)
     if not is_get_path:
         joint_path = rrt_planner.get_path_in_joinst_space(
             cur_q=jpos_controller.joint_pos, 
@@ -134,7 +121,7 @@ def main():
         
         if joint_path is not None:
             is_get_path = True
-        
+    
     if is_get_path:
         for i, joint in enumerate(joint_path):
             while True:

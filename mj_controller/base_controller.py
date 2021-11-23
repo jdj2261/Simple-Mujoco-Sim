@@ -68,6 +68,7 @@ class Controller(metaclass=abc.ABCMeta):
 
         self.q_pos = self.sim_state.qpos[self.qpos_index]
         self.q_vel = self.sim_state.qvel[self.qvel_index]
+        
         self.eef_pos = np.array(self.sim.data.body_xpos[self.sim.model.body_name2id(self.eef_name)])
         self.eef_ori_mat = np.array(self.sim.data.body_xmat[self.sim.model.body_name2id(self.eef_name)].reshape([3, 3]))
         self.eef_pos_vel = np.array(self.sim.data.body_xvelp[self.sim.model.body_name2id(self.eef_name)])

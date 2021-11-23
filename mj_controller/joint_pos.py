@@ -52,3 +52,5 @@ class JointPositionController(Controller):
 
     def clip_anti_wiseup(self, torques):
         return np.clip(torques, -self.windup, self.windup)
+
+

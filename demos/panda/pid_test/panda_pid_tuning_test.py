@@ -29,6 +29,7 @@ def main():
     result_qpos = get_result_qpos(panda_robot, init_qpos, eef_pose)
 
     jpos_controller = JointPositionController(sim=sim, eef_name=panda_robot.eef_name)
+    # jpos_controller.kp = np.array([50, 50, 50, 50, 50, 50, 50])
     jpos_controller.kp = np.array([50, 50, 50, 50, 50, 50, 50])
     jpos_controller.ki = np.array([0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1])
     jpos_controller.kd = np.array([22.2, 22.2, 22.2, 22.2, 22.2, 22.2, 22.2])

@@ -19,7 +19,12 @@ def load_pykin(path):
 
 def get_result_qpos(robot, init_qpos, eef_pos):
     is_limit_qpos = False
+    result_qpos = robot.inverse_kin(init_qpos, eef_pos, method="LM")
+    is_limit_qpos = robot.check_limit_joint(result_qpos)
+    if is_limit_qpos:
+        return result_qpos
+
     while not is_limit_qpos:
-        result_qpos = robot.inverse_kin(np.random.randn(7), eef_pos, method="LM")
+        result_qpos = robot.inverse_kin(np.random.randn(len(init_qpos)), eef_pos, method="LM")
         is_limit_qpos = robot.check_limit_joint(result_qpos)
-    return robot.inverse_kin(init_qpos, eef_pos, method="LM")
+    return result_qpos

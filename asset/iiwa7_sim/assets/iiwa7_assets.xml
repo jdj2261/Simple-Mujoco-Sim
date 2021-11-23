@@ -1,13 +1,5 @@
 <mujocoinclude>  
     <asset>
-        <mesh name="iiwa7_link_0" file="meshes/link_0.stl" />
-        <mesh name="iiwa7_link_1" file="meshes/link_1.stl" />
-        <mesh name="iiwa7_link_2" file="meshes/link_2.stl" />
-        <mesh name="iiwa7_link_3" file="meshes/link_3.stl" />
-        <mesh name="iiwa7_link_4" file="meshes/link_4.stl" />
-        <mesh name="iiwa7_link_5" file="meshes/link_5.stl" />
-        <mesh name="iiwa7_link_6" file="meshes/link_6.stl" />
-        <mesh name="iiwa7_link_7" file="meshes/link_7.stl" />
         <mesh name="iiwa7_link_0_vis" file="meshes/link_0_vis.stl" />
         <mesh name="iiwa7_link_1_vis" file="meshes/link_1_vis.stl" />
         <mesh name="iiwa7_link_2_vis" file="meshes/link_2_vis.stl" />

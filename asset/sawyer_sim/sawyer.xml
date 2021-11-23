@@ -7,11 +7,11 @@
     <include file="assets/sawyer_assets.xml"/>
     
     <!-- arenta -->
-    <include file="../../asset/common_arena/empty_arena.xml"/>
-
+    <include file="../../asset/common_arena/pegs_arena.xml"/>
+    >
     <!-- objects -->
     <include file="assets/sawyer_objects.xml"/>
-    
+
     <!-- sawyer mujoco xml-->
     <include file="assets/sawyer_body.xml"/>
 

@@ -21,7 +21,7 @@
     <body>
         <body name="object" pos="0.75 -0.25 0.85">
             <!-- can -->
-            <geom name="coke" pos="-0.1 -0.15 0" mesh="can_mesh" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" material="coke" group="0" condim="4"/>
+            <geom name="coke" pos="0.1 -0.05 0" mesh="can_mesh" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" material="coke" group="0" condim="4"/>
             <!-- milk -->
             <geom name="milk" pos="-0.1 0.15 0" mesh="milk_mesh" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" material="ceramic" group="0" condim="4"/>
     
