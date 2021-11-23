@@ -1,18 +1,17 @@
 import numpy as np
-import sys, os
 import time
 
-controller_path = os.path.abspath(os.path.abspath(__file__) + "/../../../../")
-sys.path.append(controller_path)
-demo_path = os.path.abspath(os.path.abspath(__file__) + "/../../../")
-sys.path.append(demo_path)
+import os, sys
+iiwa14_dir = os.path.dirname(os.getcwd())
+parent_path = iiwa14_dir + "/../../"
+sys.path.append(parent_path)
 
 from mj_controller.joint_pos import JointPositionController
-from common import load_mujoco, load_pykin, get_result_qpos
+from demos.common import load_mujoco, load_pykin, get_result_qpos
 
 def main():
-    sim, viewer = load_mujoco("../../../asset/iiwa14_sim/iiwa14.xml")
-    iiwa14_robot = load_pykin("../../../pykin/asset/urdf/iiwa14/iiwa14.urdf")
+    sim, viewer = load_mujoco(parent_path + "asset/iiwa14_sim/iiwa14.xml")
+    iiwa14_robot = load_pykin(parent_path + 'pykin/asset/urdf/iiwa14/iiwa14.urdf')
     iiwa14_robot.setup_link_name("iiwa14_link_0", "iiwa14_link_7")
 
     init_qpos = np.array([0, 0, 0, -1.5708, 0, 1.8675, 0])

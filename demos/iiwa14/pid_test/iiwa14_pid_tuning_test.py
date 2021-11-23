@@ -1,16 +1,12 @@
 import numpy as np
-import time
-import sys, os
-import matplotlib.pyplot as plt
-
-controller_path = os.path.abspath(os.path.abspath(__file__) + "/../../../../")
-sys.path.append(controller_path)
-demo_path = os.path.abspath(os.path.abspath(__file__) + "/../../../")
-sys.path.append(demo_path)
+import os, sys
+iiwa14_dir = os.path.dirname(os.getcwd())
+parent_path = iiwa14_dir + "/../../"
+sys.path.append(parent_path)
 
 from mj_controller.joint_pos import JointPositionController
-from common import load_mujoco, load_pykin, get_result_qpos
 from mj_controller.plot import plot_joints
+from demos.common import load_mujoco, load_pykin, get_result_qpos
 
 def main():
     t = 0
@@ -29,9 +25,9 @@ def main():
     result_qpos = get_result_qpos(iiwa14_robot, init_qpos, eef_pose)
 
     jpos_controller = JointPositionController(sim=sim, eef_name=iiwa14_robot.eef_name)
-    # jpos_controller.kp = jpos_controller.nums2array(20, 7)
-    # jpos_controller.ki = jpos_controller.nums2array(0.1, 7)
-    # jpos_controller.kd = jpos_controller.nums2array(10, 7)
+    jpos_controller.kp = jpos_controller.nums2array(20, 7)
+    jpos_controller.ki = jpos_controller.nums2array(0.1, 7)
+    jpos_controller.kd = jpos_controller.nums2array(10, 7)
 
     while t < n_timesteps:
         torque = jpos_controller.run_controller(sim, result_qpos)

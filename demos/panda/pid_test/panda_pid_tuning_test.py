@@ -1,24 +1,21 @@
 import numpy as np
-import time
-import sys, os
-import matplotlib.pyplot as plt
+import os, sys
 
-controller_path = os.path.abspath(os.path.abspath(__file__) + "/../../../../")
-sys.path.append(controller_path)
-demo_path = os.path.abspath(os.path.abspath(__file__) + "/../../../")
-sys.path.append(demo_path)
+panda_dir = os.path.dirname(os.getcwd())
+parent_path = panda_dir + "/../../"
+sys.path.append(parent_path)
 
 from mj_controller.joint_pos import JointPositionController
-from common import load_mujoco, load_pykin, get_result_qpos
 from mj_controller.plot import plot_joints
+from demos.common import load_mujoco, load_pykin, get_result_qpos
 
 def main():
     t = 0
     n_timesteps = int(5/0.002)
     qlog = np.zeros((n_timesteps, 7))
 
-    sim, viewer = load_mujoco("../../../asset/panda_sim/franka_panda.xml")
-    panda_robot = load_pykin('../../../pykin/asset/urdf/panda/panda.urdf')
+    sim, viewer = load_mujoco(parent_path + "asset/panda_sim/franka_panda.xml")
+    panda_robot = load_pykin(parent_path + 'pykin/asset/urdf/panda/panda.urdf')
     panda_robot.setup_link_name("panda_link0", "panda_link7")
 
     init_qpos = np.array([0 , 0, 0, -1.5708, 0, 1.8675, 0])
@@ -29,10 +26,7 @@ def main():
     result_qpos = get_result_qpos(panda_robot, init_qpos, eef_pose)
 
     jpos_controller = JointPositionController(sim=sim, eef_name=panda_robot.eef_name)
-    # jpos_controller.kp = np.array([50, 50, 50, 50, 50, 50, 50])
-    jpos_controller.kp = np.array([50, 50, 50, 50, 50, 50, 50])
-    jpos_controller.ki = np.array([0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1])
-    jpos_controller.kd = np.array([22.2, 22.2, 22.2, 22.2, 22.2, 22.2, 22.2])
+    jpos_controller.kp = jpos_controller.nums2array(30, 7)
 
     while t < n_timesteps:
         torque = jpos_controller.run_controller(sim, result_qpos)

@@ -1,18 +1,16 @@
 import numpy as np
-import sys, os
 import time
-
-controller_path = os.path.abspath(os.path.abspath(__file__) + "/../../../../")
-sys.path.append(controller_path)
-demo_path = os.path.abspath(os.path.abspath(__file__) + "/../../../")
-sys.path.append(demo_path)
+import os, sys
+sawyer_dir = os.path.dirname(os.getcwd())
+parent_path = sawyer_dir + "/../../"
+sys.path.append(parent_path)
 
 from mj_controller.joint_pos import JointPositionController
-from common import load_mujoco, load_pykin, get_result_qpos
+from demos.common import load_mujoco, load_pykin, get_result_qpos
 
 def main():
-    sim, viewer = load_mujoco("../../../asset/sawyer_sim/sawyer.xml")
-    sawyer_robot = load_pykin("../../../pykin/asset/urdf/sawyer/sawyer.urdf")
+    sim, viewer = load_mujoco(parent_path + "asset/sawyer_sim/sawyer.xml")
+    sawyer_robot = load_pykin(parent_path + 'pykin/asset/urdf/sawyer/sawyer.urdf')
     sawyer_robot.setup_link_name("sawyer_base", "sawyer_right_l6")
 
     print(sawyer_robot.active_joint_names)
@@ -31,14 +29,11 @@ def main():
         torque = jpos_controller.run_controller(sim, result_qpos)
         sim.data.ctrl[jpos_controller.qpos_index] = torque
 
-
         # print(sim.data.geom_xpos[sim.model.geom_name2id("coke")])
         # print(f"Current : {jpos_controller.eef_pos}")
         # cur_qpos = np.concatenate((np.zeros(1), np.array(jpos_controller.q_pos)))
         # print(f"Robot : {sawyer_robot.forward_kin(cur_qpos)[sawyer_robot.eef_name].pos}")
-        # print(np.round(jpos_controller.err_qpos, 4))
 
-        # print(sim.data.qpos[jpos_controller.gripper_index])
         if jpos_controller.is_reached():
             cnt += 1
             print(f"End Effector Position : {np.round(jpos_controller.eef_pos,4)}")

@@ -57,8 +57,6 @@ class Controller(metaclass=abc.ABCMeta):
         self.eef_ori_mat = None
         self.eef_pos_vel = None
         self.eef_ori_vel = None
-        self.joint_pos = None
-        self.joint_vel = None
         self.err_qpos = None
 
     def update(self, sim):
@@ -68,14 +66,11 @@ class Controller(metaclass=abc.ABCMeta):
 
         self.q_pos = self.sim_state.qpos[self.qpos_index]
         self.q_vel = self.sim_state.qvel[self.qvel_index]
-        
+
         self.eef_pos = np.array(self.sim.data.body_xpos[self.sim.model.body_name2id(self.eef_name)])
         self.eef_ori_mat = np.array(self.sim.data.body_xmat[self.sim.model.body_name2id(self.eef_name)].reshape([3, 3]))
         self.eef_pos_vel = np.array(self.sim.data.body_xvelp[self.sim.model.body_name2id(self.eef_name)])
         self.eef_ori_vel = np.array(self.sim.data.body_xvelr[self.sim.model.body_name2id(self.eef_name)])
-
-        self.joint_pos = np.array(self.sim.data.qpos[self.qpos_index])
-        self.joint_vel = np.array(self.sim.data.qvel[self.qvel_index])
 
         self.J_pos = np.array(self.sim.data.get_body_jacp(self.eef_name).reshape((3, -1))[:, self.qvel_index])
         self.J_ori = np.array(self.sim.data.get_body_jacr(self.eef_name).reshape((3, -1))[:, self.qvel_index])

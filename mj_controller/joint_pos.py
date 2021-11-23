@@ -37,16 +37,14 @@ class JointPositionController(Controller):
         self.summed_err = self.summed_err + position_error * self.time_step
         self.summed_err = self.clip_anti_wiseup(self.summed_err)
         
+        self.err_qpos = np.array([abs(position_error[i]) for i in self.qpos_index])
+
         desired_torque = position_error  * self._kp + \
                          self.summed_err * self._ki + \
                          vel_pos_error   * self._kd
 
-        self.err_qpos = np.array([abs(self.joint_pos[i] - self.goal_qpos[i]) for i in self.qpos_index])
-                
-        self.torques = desired_torque     
-        self.torques = np.dot(self.mass_matrix, desired_torque) + self.torque_compensation
-        
-        self.torques = self.clip_torques(self.torques)
+        desired_torque = np.dot(self.mass_matrix, desired_torque) + self.torque_compensation
+        self.torques = self.clip_torques(desired_torque)
 
         return self.torques
 
