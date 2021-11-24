@@ -14,7 +14,12 @@ class JointPositionController(Controller):
         kd=22,
         qpos_limits=None,
     ):
-        super().__init__(sim, eef_name, arm_dof, actuator_range)
+        super().__init__(
+            sim, 
+            eef_name, 
+            arm_dof, 
+            actuator_range,
+        )
 
         self.control_dim = arm_dof
         self._kp = self.nums2array(kp, self.control_dim)
@@ -22,11 +27,11 @@ class JointPositionController(Controller):
         self._kd = self.nums2array(kd, self.control_dim)
         
         self.position_limits = np.array(qpos_limits) if qpos_limits is not None else self.joint_limits
-        self.summed_err = 0                
+        self.summed_err = np.zeros(self.control_dim)               
         self.windup = self.nums2array(self.torque_limits[1]/2, self.control_dim)
         
-    def run_controller(self, sim, q_desired):
-        self.goal_qpos = np.array(q_desired)
+    def run_controller(self, sim, qpos_desired):
+        self.goal_qpos = np.array(qpos_desired)
         assert self.goal_qpos.shape == (len(self.qpos_index),)
         
         self.update(sim)
@@ -51,4 +56,6 @@ class JointPositionController(Controller):
     def clip_anti_wiseup(self, torques):
         return np.clip(torques, -self.windup, self.windup)
 
-
+    def is_reached(self):
+        eps = 1e-1
+        return True if np.all(self.err_qpos < eps) else False

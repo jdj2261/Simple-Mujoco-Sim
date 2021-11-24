@@ -35,6 +35,10 @@ class Controller(metaclass=abc.ABCMeta):
     def run_controller(self):
         pass
 
+    @abc.abstractmethod
+    def is_reached(self):
+        pass
+    
     def _setup_robot_state(self):
         self.arm_joints = [self.sim.model.joint_id2name(x) for x in range(self.arm_dof)]
         self.qpos_index = [self.sim.model.get_joint_qpos_addr(x) for x in self.arm_joints]
@@ -100,10 +104,6 @@ class Controller(metaclass=abc.ABCMeta):
            (is_right_contact and contact_r.dist < 1e-3):
             return True
         return False
-
-    def is_reached(self):
-        eps = 1e-2
-        return True if np.all(self.err_qpos < eps) else False
 
     @staticmethod
     def nums2array(nums, dim):
