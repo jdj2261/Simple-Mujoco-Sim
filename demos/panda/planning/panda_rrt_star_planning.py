@@ -42,8 +42,8 @@ def main():
 
     mesh_path = parent_path+"pykin/asset/urdf/panda/"
     c_manager = CollisionManager(mesh_path)
-    c_manager.filter_contact_names(panda_robot, panda_robot.forward_kin(jpos_controller.joint_pos))
-    c_manager = apply_robot_to_collision_manager(c_manager, panda_robot, panda_robot.forward_kin(jpos_controller.joint_pos))
+    c_manager.filter_contact_names(panda_robot, panda_robot.forward_kin(jpos_controller.q_pos))
+    c_manager = apply_robot_to_collision_manager(c_manager, panda_robot, panda_robot.forward_kin(jpos_controller.q_pos))
 
     o_manager = CollisionManager()
 
@@ -115,7 +115,7 @@ def main():
 
     if not is_get_path:
         joint_path = rrt_planner.get_path_in_joinst_space(
-            cur_q=jpos_controller.joint_pos, 
+            cur_q=jpos_controller.q_pos, 
             goal_pose=target_eef_pose,
             resolution=1)
         

@@ -62,7 +62,7 @@ def main():
     if jpos_controller.is_reached() and not is_get_path[0]:
         jpos_controller.kp = 50
         joint_path, _ = task_plan.get_path_in_joinst_space(
-            current_q=jpos_controller.joint_pos,
+            current_q=jpos_controller.q_pos,
             goal_pose=target_eef_pose,
             resolution=0.001, 
             damping=0.03,
@@ -88,7 +88,7 @@ def main():
 
     if jpos_controller.is_reached() and not is_get_path[1]:
         joint_path, _ = task_plan.get_path_in_joinst_space(
-            current_q=jpos_controller.joint_pos,
+            current_q=jpos_controller.q_pos,
             goal_pose=target_eef_pose1,
             resolution=0.002, 
             damping=0.03,
@@ -114,7 +114,7 @@ def main():
 
     if jpos_controller.is_reached() and not is_get_path[2]:
         joint_path, _ = task_plan.get_path_in_joinst_space(
-            current_q=jpos_controller.joint_pos,
+            current_q=jpos_controller.q_pos,
             goal_pose=target_eef_pose2,
             resolution=0.001, 
             damping=0.03,
