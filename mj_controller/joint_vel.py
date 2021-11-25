@@ -41,7 +41,7 @@ class JointVelocityController(Controller):
         self.last_err = velocity_error
 
         self.summed_err = self.summed_err + velocity_error * self.time_step
-        self.summed_err = self.clip_anti_wiseup(self.summed_err)
+        self.summed_err = self.clip_anti_windup(self.summed_err)
         
         self.err_qvel = np.array([abs(velocity_error[i]) for i in self.qpos_index])
 
@@ -54,7 +54,7 @@ class JointVelocityController(Controller):
 
         return self.torques
 
-    def clip_anti_wiseup(self, torques):
+    def clip_anti_windup(self, torques):
         return np.clip(torques, -self.windup, self.windup)
 
     def is_reached(self):
