@@ -16,7 +16,7 @@ def main():
 
     sim, viewer = load_mujoco(parent_path + "asset/sawyer_sim/sawyer.xml")
     sawyer_robot = load_pykin(parent_path + 'pykin/asset/urdf/sawyer/sawyer.urdf')
-    sawyer_robot.setup_link_name("sawyer_base", "sawyer_right_l6")
+    sawyer_robot.setup_link_name("sawyer_base", "sawyer_right_hand")
 
     init_qpos = np.array([0, 0, 0, -1.5708, 0, 1.8675, 0])
     desired_qpos = np.array([0, 0, np.pi/6, 0.0, -np.pi/2, 0.0, np.pi*5/8,0.0])

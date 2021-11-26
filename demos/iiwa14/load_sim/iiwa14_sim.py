@@ -10,7 +10,7 @@ from demos.common import load_mujoco, load_pykin, get_result_qpos
 def main():
     sim, viewer = load_mujoco(parent_path + "asset/iiwa14_sim/iiwa14.xml")
     iiwa14_robot = load_pykin(parent_path + 'pykin/asset/urdf/iiwa14/iiwa14.urdf')
-    iiwa14_robot.setup_link_name("iiwa14_link_0", "iiwa14_link_7")
+    iiwa14_robot.setup_link_name("iiwa14_link_0", "iiwa14_right_hand")
 
     init_qpos = np.array([0, 0, 0, -1.5708, 0, 1.8675, 0])
     desired_qpos = np.array([0.000, 0.650, 0.000, -1.690, 0.000, 0.300, 0.000])

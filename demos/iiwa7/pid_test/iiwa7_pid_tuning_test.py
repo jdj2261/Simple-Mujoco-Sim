@@ -15,7 +15,7 @@ def main():
 
     sim, viewer = load_mujoco("../../../asset/iiwa7_sim/iiwa7.xml")
     iiwa7_robot = load_pykin("../../../pykin/asset/urdf/iiwa7/iiwa7.urdf")
-    iiwa7_robot.setup_link_name("iiwa7_link_0", "iiwa7_link_7")
+    iiwa7_robot.setup_link_name("iiwa7_link_0", "iiwa7_right_hand")
 
     init_qpos = np.array([0, 0, 0, -1.5708, 0, 1.8675, 0])
     desired_qpos = np.array([0, np.pi/6, 0.0, -0, 0.0, 0,0.0])

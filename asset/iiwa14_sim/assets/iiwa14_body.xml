@@ -46,9 +46,14 @@
                     <inertial euler="0 0 0" pos="0 0 0.02" mass="1.2" diaginertia="0.001 0.001 0.001"/>
                     <geom class="collision" type="mesh" mesh="iiwa14_link_7_mesh"/>
                     <geom class="visual" type="mesh" mesh="iiwa14_link_7_mesh" material="iiwa14_grey"/>
-                    <site name="ee_site" pos="0 0 0.05" euler="0 0 0" size="0.005, 0.005, 0.005"/>
+                    <!-- <site name="ee_site" pos="0 0 0.05" euler="0 0 0" size="0.005, 0.005, 0.005"/> -->
                     <camera pos="0.1 0 0" euler="3.14159265359 0 -1.57079632679"/>
-                    <include file="peg/peg_collision.xml"/>
+                    <body name="iiwa14_right_hand" pos="0 0 0.045" quat="1 0 0 0">
+                                                    <!-- This camera points out from the eef. -->
+                        <camera mode="fixed" name="iiwa14_eye_in_hand" pos="0.05 0 0" quat="0 0.707108 0.707108 0" fovy="75"/>
+                        <!-- To add gripper -->
+                        <include file="peg/peg_collision.xml"/>
+                    </body>
                   </body>
                 </body>
               </body>

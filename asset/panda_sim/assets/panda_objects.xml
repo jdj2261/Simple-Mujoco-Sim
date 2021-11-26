@@ -32,7 +32,7 @@
             <!-- can -->
             <geom name="coke" pos="-0.1 -0.15 0" mesh="can_mesh" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" material="coke" group="0" condim="4"/>
             <!-- milk -->
-            <geom name="milk" pos="-0.1 0.15 0.35" mesh="milk_mesh" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" material="ceramic" group="0" condim="4"/>
+            <geom name="milk" pos="-0.1 0.15 0.33" mesh="milk_mesh" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" material="ceramic" group="0" condim="4"/>
             <!-- <geom name="milk1" pos="-0.1 0.15 0.3" mesh="milk_mesh" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" material="ceramic" group="0" condim="4"/> -->
             <!-- <geom name="milk2" pos="-0.1 0.15 0.6" mesh="milk_mesh" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" material="ceramic" group="0" condim="4"/> -->
             <!-- <geom name="milk3" pos="-0.1 0.15 0.9" mesh="milk_mesh" type="mesh" solimp="0.998 0.998 0.001" solref="0.001 1" density="100" friction="0.95 0.3 0.1" material="ceramic" group="0" condim="4"/> -->

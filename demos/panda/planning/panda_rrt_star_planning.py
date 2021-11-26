@@ -27,7 +27,7 @@ mjGEOM_MESH,                    # mesh
 def main():
     sim, viewer = load_mujoco(parent_path + "asset/panda_sim/franka_panda.xml")
     panda_robot = load_pykin(parent_path + 'pykin/asset/urdf/panda/panda.urdf')
-    panda_robot.setup_link_name("panda_link0", "panda_link7")
+    panda_robot.setup_link_name("panda_link0", "panda_right_hand")
 
     init_qpos = np.array([0 , 0, 0, -1.5708, 0, 1.8675, 0])
     desired_qpos = np.array([np.pi/6, np.pi/4, 0.0, -np.pi/2, 0.0, np.pi*5/8,0.0])
@@ -47,7 +47,7 @@ def main():
 
     o_manager = CollisionManager()
 
-    obstacle_safety = 2
+    obstacle_safety = 1.5
     o_manager.add_object(
         "1_frame",
         gtype="cylinder", 
@@ -85,9 +85,9 @@ def main():
         robot=panda_robot,
         self_collision_manager=c_manager,
         obstacle_collision_manager=o_manager,
-        delta_distance=0.5,
+        delta_distance=0.2,
         epsilon=0.2, 
-        max_iter=1000,
+        max_iter=2000,
         gamma_RRT_star=3,
         dimension=7
     )
@@ -117,7 +117,7 @@ def main():
         joint_path = rrt_planner.get_path_in_joinst_space(
             cur_q=jpos_controller.q_pos, 
             goal_pose=target_eef_pose,
-            resolution=1)
+            resolution=0.2)
         
         if joint_path is not None:
             is_get_path = True
@@ -127,7 +127,7 @@ def main():
             while True:
                 # print(jpos_controller.time_step)
                 print(f"{i}/{len(joint_path)}")
-                jpos_controller.kp = 50
+                jpos_controller.kp = 20
                 # jpos_controller.ki = 0.2
                 # jpos_controller.kd = 10.22
                 torque = jpos_controller.run_controller(sim, joint)

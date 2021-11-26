@@ -11,7 +11,7 @@ from demos.common import load_mujoco, load_pykin, get_result_qpos
 def main():
     sim, viewer = load_mujoco(parent_path + "asset/sawyer_sim/sawyer.xml")
     sawyer_robot = load_pykin(parent_path + 'pykin/asset/urdf/sawyer/sawyer.urdf')
-    sawyer_robot.setup_link_name("sawyer_base", "sawyer_right_l6")
+    sawyer_robot.setup_link_name("sawyer_base", "sawyer_right_hand")
 
     print(sawyer_robot.active_joint_names)
 
@@ -30,9 +30,9 @@ def main():
         sim.data.ctrl[jpos_controller.qpos_index] = torque
 
         # print(sim.data.geom_xpos[sim.model.geom_name2id("coke")])
-        # print(f"Current : {jpos_controller.eef_pos}")
-        # cur_qpos = np.concatenate((np.zeros(1), np.array(jpos_controller.q_pos)))
-        # print(f"Robot : {sawyer_robot.forward_kin(cur_qpos)[sawyer_robot.eef_name].pos}")
+        print(f"Current : {jpos_controller.eef_pos}")
+        cur_qpos = np.concatenate((np.zeros(1), np.array(jpos_controller.q_pos)))
+        print(f"Robot : {sawyer_robot.forward_kin(cur_qpos)[sawyer_robot.eef_name].pos}")
 
         if jpos_controller.is_reached():
             cnt += 1

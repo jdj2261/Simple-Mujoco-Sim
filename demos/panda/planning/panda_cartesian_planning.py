@@ -17,7 +17,7 @@ from pykin.kinematics.transform import Transform
 def main():
     sim, viewer = load_mujoco(parent_path + "asset/panda_sim/franka_panda.xml")
     panda_robot = load_pykin(parent_path + 'pykin/asset/urdf/panda/panda.urdf')
-    panda_robot.setup_link_name("panda_link0", "panda_link7")
+    panda_robot.setup_link_name("panda_link0", "panda_right_hand")
 
     ####
     # model = mp.from_file(controller_path+"/asset/panda_sim/assets/panda_objects.xml", model_dir=controller_path+"/asset/common_objects/")
@@ -35,9 +35,9 @@ def main():
     init_qpos = np.array([0, 0.1963495375, 0.00, -2.616, 0.00, 2.9415926, 0.78539815])
     eef_pose = [0.65, 0.3464,  1.17,  -0.025,  0.778,  0.597, -0.193,]
     result_qpos = get_result_qpos(panda_robot, init_qpos, eef_pose)
-    target_eef_pose = [0.65, 0.3464,  1.47,  -0.025,  0.778,  0.597, -0.193]
-    target_eef_pose1 = [0.65, -0.3464,  1.47,  -0.025,  0.778,  0.597, -0.193]
-    target_eef_pose2 = [0.65, -0.3464,  1.17,  -0.025,  0.778,  0.597, -0.193]
+    target_eef_pose = [0.65, 0.3464,  1.37,  -0.025,  0.778,  0.597, -0.193]
+    target_eef_pose1 = [0.65, -0.3464,  1.37,  -0.025,  0.778,  0.597, -0.193]
+    target_eef_pose2 = [0.65, -0.3464,  1.07,  -0.025,  0.778,  0.597, -0.193]
 
     jpos_controller = JointPositionController(sim=sim, eef_name=panda_robot.eef_name)
     jpos_controller.kp = 20
@@ -91,7 +91,7 @@ def main():
         joint_path, _ = task_plan.get_path_in_joinst_space(
             current_q=jpos_controller.q_pos,
             goal_pose=target_eef_pose,
-            resolution=0.1, 
+            resolution=0.01, 
             damping=0.03,
             pos_sensitivity=0.04,
             is_slerp=False)
@@ -117,7 +117,7 @@ def main():
         joint_path, _ = task_plan.get_path_in_joinst_space(
             current_q=jpos_controller.q_pos,
             goal_pose=target_eef_pose1,
-            resolution=0.1, 
+            resolution=0.01, 
             damping=0.03,
             pos_sensitivity=0.04,
             is_slerp=False)
@@ -149,7 +149,7 @@ def main():
         joint_path, _ = task_plan.get_path_in_joinst_space(
             current_q=jpos_controller.q_pos,
             goal_pose=target_eef_pose2,
-            resolution=1, 
+            resolution=0.01, 
             damping=0.03,
             pos_sensitivity=0.04,
             is_slerp=False)

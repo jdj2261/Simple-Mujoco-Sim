@@ -1,5 +1,5 @@
 <mujoco>
-  <body name="peg" euler="0 0 0" pos="0 0 0.05">
+  <body name="peg" euler="0 0 0" pos="0 0 0">
     <inertial pos="0 0 0" mass="1"/>
     <geom class="visual" type="cylinder" pos="0 0 0.01862" size="0.031 0.01862"/>
     <geom class="collision" type="cylinder" pos="0 0 0.01862" size="0.031 0.01862"/>
