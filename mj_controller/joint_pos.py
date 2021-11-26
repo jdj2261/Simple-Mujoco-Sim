@@ -51,6 +51,7 @@ class JointPositionController(Controller):
         desired_torque = np.dot(self.mass_matrix, desired_torque) + self.torque_compensation
         self.torques = self.clip_torques(desired_torque)
 
+        super().run_controller()
         return self.torques
 
     def clip_anti_windup(self, torques):

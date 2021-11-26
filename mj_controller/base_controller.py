@@ -26,6 +26,7 @@ class Controller(metaclass=abc.ABCMeta):
 
         self._setup_robot_state()
 
+        self.new_update = True
         self.sim.forward()
         self.time_step = self.sim.model.opt.timestep
         self.sim_state = self.sim.get_state()
@@ -33,7 +34,7 @@ class Controller(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def run_controller(self):
-        pass
+        self.new_update = True
 
     @abc.abstractmethod
     def is_reached(self):
@@ -64,26 +65,29 @@ class Controller(metaclass=abc.ABCMeta):
         self.err_qpos = None
 
     def update(self, sim):
-        self.sim = sim
-        self.sim.forward()
-        self.sim_state = self.sim.get_state()
 
-        self.q_pos = self.sim_state.qpos[self.qpos_index]
-        self.q_vel = self.sim_state.qvel[self.qvel_index]
+        if self.new_update:
+            self.sim = sim
+            # self.sim.forward()
+            self.sim_state = self.sim.get_state()
+            self.q_pos = self.sim_state.qpos[self.qpos_index]
+            self.q_vel = self.sim_state.qvel[self.qvel_index]
 
-        self.eef_pos = np.array(self.sim.data.body_xpos[self.sim.model.body_name2id(self.eef_name)])
-        self.eef_ori_mat = np.array(self.sim.data.body_xmat[self.sim.model.body_name2id(self.eef_name)].reshape([3, 3]))
-        self.eef_pos_vel = np.array(self.sim.data.body_xvelp[self.sim.model.body_name2id(self.eef_name)])
-        self.eef_ori_vel = np.array(self.sim.data.body_xvelr[self.sim.model.body_name2id(self.eef_name)])
+            self.eef_pos = np.array(self.sim.data.body_xpos[self.sim.model.body_name2id(self.eef_name)])
+            self.eef_ori_mat = np.array(self.sim.data.body_xmat[self.sim.model.body_name2id(self.eef_name)].reshape([3, 3]))
+            self.eef_pos_vel = np.array(self.sim.data.body_xvelp[self.sim.model.body_name2id(self.eef_name)])
+            self.eef_ori_vel = np.array(self.sim.data.body_xvelr[self.sim.model.body_name2id(self.eef_name)])
 
-        self.J_pos = np.array(self.sim.data.get_body_jacp(self.eef_name).reshape((3, -1))[:, self.qvel_index])
-        self.J_ori = np.array(self.sim.data.get_body_jacr(self.eef_name).reshape((3, -1))[:, self.qvel_index])
-        self.J_full = np.array(np.vstack([self.J_pos, self.J_ori]))
+            self.J_pos = np.array(self.sim.data.get_body_jacp(self.eef_name).reshape((3, -1))[:, self.qvel_index])
+            self.J_ori = np.array(self.sim.data.get_body_jacr(self.eef_name).reshape((3, -1))[:, self.qvel_index])
+            self.J_full = np.array(np.vstack([self.J_pos, self.J_ori]))
 
-        mass_matrix = np.ndarray(shape=(len(self.sim.data.qvel) ** 2,), dtype=np.float64, order='C')
-        mujoco_py.cymj._mj_fullM(self.sim.model, mass_matrix, self.sim.data.qM)
-        mass_matrix = np.reshape(mass_matrix, (len(self.sim.data.qvel), len(self.sim.data.qvel)))
-        self.mass_matrix = mass_matrix[self.qvel_index, :][:, self.qvel_index]
+            mass_matrix = np.ndarray(shape=(len(self.sim.data.qvel) ** 2,), dtype=np.float64, order='C')
+            mujoco_py.cymj._mj_fullM(self.sim.model, mass_matrix, self.sim.data.qM)
+            mass_matrix = np.reshape(mass_matrix, (len(self.sim.data.qvel), len(self.sim.data.qvel)))
+            self.mass_matrix = mass_matrix[self.qvel_index, :][:, self.qvel_index]
+
+        self.new_update = False
 
     def clip_torques(self, torques):
         return np.clip(torques, self.torque_limits[0], self.torque_limits[1])
