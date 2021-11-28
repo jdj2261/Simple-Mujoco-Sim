@@ -1,5 +1,5 @@
 import numpy as np
-from mj_controller.base_controller import Controller
+from controllers.base_controller import Controller
 
 
 class JointPositionController(Controller):

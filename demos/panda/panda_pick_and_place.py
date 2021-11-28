@@ -5,7 +5,7 @@ panda_dir = os.path.dirname(os.getcwd())
 parent_path = panda_dir + "/../"
 sys.path.append(parent_path)
 
-from mj_controller.joint_pos import JointPositionController
+from controllers.joint_pos import JointPositionController
 from demos.common import load_mujoco, load_pykin, get_result_qpos
 
 def main():

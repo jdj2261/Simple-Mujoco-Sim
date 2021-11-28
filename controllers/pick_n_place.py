@@ -10,10 +10,10 @@ class PicknPlace:
 
     def _get_controller(self, info):
         if info == "JOINT_POSITION":
-            from mj_controller.joint_pos import JointPositionController
+            from controllers.joint_pos import JointPositionController
             controller = JointPositionController()
         if info == "JOINT_VELOCITY":
-            from mj_controller.joint_vel import JointVelocityController
+            from controllers.joint_vel import JointVelocityController
             controller = JointVelocityController() 
         return controller
 
