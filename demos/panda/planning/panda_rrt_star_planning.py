@@ -42,12 +42,12 @@ def main():
 
     mesh_path = parent_path+"pykin/asset/urdf/panda/"
     c_manager = CollisionManager(mesh_path)
-    c_manager.filter_contact_names(panda_robot, panda_robot.forward_kin(jpos_controller.q_pos))
-    c_manager = apply_robot_to_collision_manager(c_manager, panda_robot, panda_robot.forward_kin(jpos_controller.q_pos))
+    c_manager.filter_contact_names(panda_robot, panda_robot.forward_kin(init_qpos))
+    c_manager = apply_robot_to_collision_manager(c_manager, panda_robot, panda_robot.forward_kin(init_qpos))
 
     o_manager = CollisionManager()
 
-    obstacle_safety = 1.2
+    obstacle_safety = 1.3
     o_manager.add_object(
         "1_frame",
         gtype="cylinder", 
