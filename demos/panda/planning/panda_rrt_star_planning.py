@@ -47,7 +47,7 @@ def main():
 
     o_manager = CollisionManager()
 
-    obstacle_safety = 1.5
+    obstacle_safety = 1.2
     o_manager.add_object(
         "1_frame",
         gtype="cylinder", 
@@ -81,15 +81,18 @@ def main():
     # print(sim.model.geom_size[sim.model.geom_name2id("5_frame")] * obstacle_safety)
     # print(sim.data.geom_xpos[sim.model.geom_name2id("5_frame")])
 
+    print(sim.model.geom_size[sim.model.geom_name2id("3_frame")])
+
     rrt_planner = RRTStarPlanner(
         robot=panda_robot,
         self_collision_manager=c_manager,
         obstacle_collision_manager=o_manager,
-        delta_distance=0.2,
+        delta_distance=0.1,
         epsilon=0.2, 
-        max_iter=2000,
+        max_iter=1000,
         gamma_RRT_star=3,
-        dimension=7
+        dimension=7,
+        n_step=10
     )
     # print(sim.data.geom_xpos[sim.model.geom_name2id("r_frame")])
     # print(sim.data.geom_xpos[sim.model.geom_name2id("c_frame")])
@@ -114,19 +117,19 @@ def main():
                 break
 
     if not is_get_path:
-        joint_path = rrt_planner.get_path_in_joinst_space(
+        joint_path, interpolated_path = rrt_planner.get_path_in_joinst_space(
             cur_q=jpos_controller.q_pos, 
             goal_pose=target_eef_pose,
-            resolution=0.2)
+            resolution=1)
         
         if joint_path is not None:
             is_get_path = True
     
     if is_get_path:
-        for i, joint in enumerate(joint_path):
+        for i, joint in enumerate(interpolated_path):
             while True:
                 # print(jpos_controller.time_step)
-                print(f"{i}/{len(joint_path)}")
+                print(f"{i}/{len(interpolated_path)}")
                 jpos_controller.kp = 20
                 # jpos_controller.ki = 0.2
                 # jpos_controller.kd = 10.22
@@ -135,7 +138,7 @@ def main():
                 
                 if jpos_controller.is_reached():
                     print("reach")
-                    print(f"{i+1}/{len(joint_path)}")
+                    print(f"{i+1}/{len(interpolated_path)}")
                     break
                 
                 # print(jpos_controller.err_qpos)
@@ -143,7 +146,7 @@ def main():
                 sim.step()
                 viewer.render()
 
-    last_qpos = joint_path[-1]
+    last_qpos = interpolated_path[-1]
     while True:
         if jpos_controller.is_reached():
             torque = jpos_controller.run_controller(sim, last_qpos)
