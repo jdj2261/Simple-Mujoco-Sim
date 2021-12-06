@@ -23,7 +23,7 @@ class PicknPlace:
         self._rrt_planner = rrt_planner
 
     def move_to_init_pose(self):
-        pass
+        self.jmove_in_jspace(self._robot.init_qpos)
 
     def select_grasp_pose(self):
         pass
@@ -59,8 +59,6 @@ class PicknPlace:
                 self.jmove_in_jspace(qpos)
                 print(f"{i+1}/{len(joint_path)}")
         print("reach")
-
-
 
     def jmove_in_cspace(self, pose):
         init_qpos = self._robot.init_qpos

@@ -17,7 +17,7 @@ from pykin.kinematics.transform import Transform
 def main():
     sim, viewer = load_mujoco(parent_path + "asset/panda_sim/franka_panda.xml")
     panda_robot = load_pykin(parent_path + 'pykin/asset/urdf/panda/panda.urdf')
-    panda_robot.setup_link_name("panda_link0", "panda_right_hand")
+    panda_robot.setup_link_name("panda_link_0", "panda_right_hand")
 
     ####
     # model = mp.from_file(controller_path+"/asset/panda_sim/assets/panda_objects.xml", model_dir=controller_path+"/asset/common_objects/")
