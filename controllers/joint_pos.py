@@ -27,7 +27,9 @@ class JointPositionController(Controller):
         self._kd = self.nums2array(kd, self.control_dim)
         
         self.position_limits = np.array(qpos_limits) if qpos_limits is not None else self.joint_limits
-        self.summed_err = np.zeros(self.control_dim)               
+        self.summed_err = np.zeros(self.control_dim)
+        self.err_qpos = None
+        self._is_reached_result = False
         self.windup = self.nums2array(self.torque_limits[1]/2, self.control_dim)
         
     def run_controller(self, sim, qpos_desired):
@@ -58,5 +60,13 @@ class JointPositionController(Controller):
         return np.clip(torques, -self.windup, self.windup)
 
     def is_reached(self):
+        if self.err_qpos is None:
+            return self._is_reached_result
+
         eps = 1e-1
-        return True if np.all(self.err_qpos < eps) else False
+        if np.all(self.err_qpos < eps) and not self._is_reached_result:
+            self._is_reached_result = True
+            return self._is_reached_result
+
+        self._is_reached_result = False
+        return self._is_reached_result

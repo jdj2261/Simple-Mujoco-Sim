@@ -8,16 +8,19 @@ class PicknPlace:
         viewer,
         mujoco_robot,
         pykin_robot,
-        gripper,
         controller,
-        
+        gripper,
+        cartesisan_planner,
+        rrt_planner,
     ):
         self._sim = sim
         self._viewer = viewer
         self._robot = mujoco_robot
         self._pykin = pykin_robot
-        self._gripper = gripper
         self._controller = controller
+        self._gripper = gripper
+        self._c_planner = cartesisan_planner
+        self._rrt_planner = rrt_planner
 
     def move_to_init_pose(self):
         pass
@@ -41,36 +44,49 @@ class PicknPlace:
             is_limit_qpos = self._pykin.check_limit_joint(result_qpos)
         return result_qpos
 
-    def approach_pose_using_rrt(self, pose):
-        pass
+    def approach_pose_using_rrt(self, pose, is_interpolated=True):
+        interpolated_path, joint_path = self._rrt_planner.get_path_in_joinst_space(
+            cur_q=self._controller.q_pos, 
+            goal_pose=pose,
+            resolution=1)
+        
+        if is_interpolated:
+            for i, qpos in enumerate(interpolated_path):
+                self.jmove_in_jspace(qpos)
+                print(f"{i+1}/{len(interpolated_path)}")
+        else:
+            for i, qpos in enumerate(joint_path):
+                self.jmove_in_jspace(qpos)
+                print(f"{i+1}/{len(joint_path)}")
+        print("reach")
 
-    def approach_pose_using_diff_inverse(self, pos):
-        pass
+
 
     def jmove_in_cspace(self, pose):
         init_qpos = self._robot.init_qpos
         result_qpos = self._check_ik_solution(init_qpos, pose)
-        is_reached = False
-
-        while not is_reached:
-            torque = self._controller.run_controller(self._sim, result_qpos)
-            self._sim.data.ctrl[self._controller.qpos_index] = torque
-            if self._controller.is_reached():
-                is_reached = True
-            self._sim.step()
-            self._viewer.render()
-
+        self.jmove_in_jspace(result_qpos)
+        
     def jmove_in_jspace(self, joints):
-        is_reached = False
-        while not is_reached:
+        while not self._controller.is_reached():
             torque = self._controller.run_controller(self._sim, joints)
             self._sim.data.ctrl[self._controller.qpos_index] = torque
-            if self._controller.is_reached():
-                is_reached = True
             self._sim.step()
             self._viewer.render()
-    def cmove(self, sim, pose):
-        pass
+
+    def cmove(self, pose, resolution=1, damping=0.03, pos_sensitivity=0.03, is_slerp=False):
+        joint_path, _ = self._c_planner.get_path_in_joinst_space(            
+            current_q=self._controller.q_pos,
+            goal_pose=pose,
+            resolution=resolution, 
+            damping=damping,
+            pos_sensitivity=pos_sensitivity,
+            is_slerp=is_slerp)
+
+        for i, qpos in enumerate(joint_path):
+            self.jmove_in_jspace(qpos)
+            print(f"{i+1}/{len(joint_path)}")
+        print("reach")
 
     def stop(self):
         pass
