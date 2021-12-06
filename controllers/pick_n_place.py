@@ -51,28 +51,26 @@ class PicknPlace:
             resolution=1)
         
         if is_interpolated:
-            for i, qpos in enumerate(interpolated_path):
+            for _, qpos in enumerate(interpolated_path):
                 self.jmove_in_jspace(qpos)
-                print(f"{i+1}/{len(interpolated_path)}")
         else:
-            for i, qpos in enumerate(joint_path):
+            for _, qpos in enumerate(joint_path):
                 self.jmove_in_jspace(qpos)
-                print(f"{i+1}/{len(joint_path)}")
         print("reach")
 
     def jmove_in_cspace(self, pose):
         init_qpos = self._robot.init_qpos
         result_qpos = self._check_ik_solution(init_qpos, pose)
         self.jmove_in_jspace(result_qpos)
-        
+
     def jmove_in_jspace(self, joints):
         while not self._controller.is_reached():
-            torque = self._controller.run_controller(self._sim, joints)
-            self._sim.data.ctrl[self._controller.qpos_index] = torque
+            self.torque = self._controller.run_controller(self._sim, joints)
+            self._sim.data.ctrl[self._controller.qpos_index] = self.torque
             self._sim.step()
             self._viewer.render()
 
-    def cmove(self, pose, resolution=1, damping=0.03, pos_sensitivity=0.03, is_slerp=False):
+    def cmove(self, pose, resolution=0.01, damping=0.03, pos_sensitivity=0.03, is_slerp=False):
         joint_path, _ = self._c_planner.get_path_in_joinst_space(            
             current_q=self._controller.q_pos,
             goal_pose=pose,
@@ -81,25 +79,43 @@ class PicknPlace:
             pos_sensitivity=pos_sensitivity,
             is_slerp=is_slerp)
 
-        for i, qpos in enumerate(joint_path):
+        for _, qpos in enumerate(joint_path):
             self.jmove_in_jspace(qpos)
-            print(f"{i+1}/{len(joint_path)}")
         print("reach")
 
     def stop(self):
         pass
 
     def open_gripper(self):
-        pass
+        for _ in range(1000):
+            torqe = self._controller.run_controller(self._sim, self._controller.q_pos)
+            self._sim.data.ctrl[self._controller.qpos_index] = torqe
+            self._sim.data.ctrl[self._controller.gripper_index] = [0.4, -0.4]
+            # self._sim.data.ctrl[self._controller.gripper_index] = [-0.020833, 0.020833] // Rethink
+            # self._sim.data.ctrl[self._controller.gripper_index] = [0.0, 0.0] // Robotiq140
+            self._sim.step()
+            self._viewer.render()
 
     def close_gripper(self):
-        pass
+        for _ in range(1000):
+            torqe = self._controller.run_controller(self._sim, self._controller.q_pos)
+            self._sim.data.ctrl[self._controller.qpos_index] = torqe
+            self._sim.data.ctrl[self._controller.gripper_index] = [0.0, 0.0]
+            # self._sim.data.ctrl[self._controller.gripper_index] = [0.7, -0.7] // Robotiq140
+            # self._sim.data.ctrl[self._controller.gripper_index] = [0.0115, -0.0115] // Rethink
+            self._sim.step()
+            self._viewer.render()
 
     def _check_grasp(self):
         pass
 
     def pick(self, pose):
-        pass
-
+        self.jmove_in_cspace(pose)
+        self.open_gripper()
+        self.cmove([ 0.7, -0.3, 0.97])
+        self.close_gripper()
+            
     def place(self, pose):
-        pass
+        self.jmove_in_cspace(pose)
+        self.cmove([0.6, 0.4, 1.05])
+        self.open_gripper()

@@ -63,7 +63,7 @@ class JointPositionController(Controller):
         if self.err_qpos is None:
             return self._is_reached_result
 
-        eps = 1e-1
+        eps = 0.002
         if np.all(self.err_qpos < eps) and not self._is_reached_result:
             self._is_reached_result = True
             return self._is_reached_result
