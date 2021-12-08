@@ -25,9 +25,9 @@ def main():
         torque = jpos_controller.run_controller(sim, result_qpos)
         sim.data.ctrl[jpos_controller.qpos_index] = torque
 
-        # print(f"Current : {jpos_controller.eef_pos}")
-        # print(f"Robot : {panda_robot.forward_kin(jpos_controller.q_pos)[panda_robot.eef_name].pos}")
-        # print()
+        print(f"Current : {jpos_controller.eef_pos}")
+        print(f"Robot : {panda_robot.forward_kin(jpos_controller.q_pos)[panda_robot.eef_name].pos}")
+        print()
         sim.step()
         viewer.render()
 

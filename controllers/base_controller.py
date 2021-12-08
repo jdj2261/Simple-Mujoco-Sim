@@ -3,7 +3,7 @@ import numpy as np
 import mujoco_py
 
 from collections.abc import Iterable
-
+from utils.transform_utils import pose2mat
 
 class Controller(metaclass=abc.ABCMeta):
     def __init__(
@@ -60,6 +60,7 @@ class Controller(metaclass=abc.ABCMeta):
         self.eef_index = self.sim.model.body_name2id(self.eef_name)
         self.eef_pos = None
         self.eef_ori_mat = None
+        self.eef_pose = None
         self.eef_pos_vel = None
         self.eef_ori_vel = None
         self.err_qpos = None
@@ -75,6 +76,8 @@ class Controller(metaclass=abc.ABCMeta):
 
             self.eef_pos = np.array(self.sim.data.body_xpos[self.sim.model.body_name2id(self.eef_name)])
             self.eef_ori_mat = np.array(self.sim.data.body_xmat[self.sim.model.body_name2id(self.eef_name)].reshape([3, 3]))
+            self.eef_pose = pose2mat(R=self.eef_ori_mat, p=self.eef_pos)
+
             self.eef_pos_vel = np.array(self.sim.data.body_xvelp[self.sim.model.body_name2id(self.eef_name)])
             self.eef_ori_vel = np.array(self.sim.data.body_xvelr[self.sim.model.body_name2id(self.eef_name)])
 
