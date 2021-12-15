@@ -59,11 +59,10 @@ class JointPositionController(Controller):
     def clip_anti_windup(self, torques):
         return np.clip(torques, -self.windup, self.windup)
 
-    def is_reached(self):
+    def is_reached(self, eps=0.01):
         if self.err_qpos is None:
             return self._is_reached_result
 
-        eps = 0.002
         if np.all(self.err_qpos < eps) and not self._is_reached_result:
             self._is_reached_result = True
             return self._is_reached_result
