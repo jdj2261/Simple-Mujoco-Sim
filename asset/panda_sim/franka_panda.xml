@@ -12,7 +12,7 @@
 
     <!-- objects -->
     <!-- <include file="assets/panda_objects.xml"/> -->
-    <include file="../../asset/common_objects/custom_cylinder.xml"/>
+    <!-- <include file="../../asset/common_objects/custom_cylinder.xml"/> -->
 
     <!-- panda body xml-->
     <include file="assets/panda_body.xml"/>

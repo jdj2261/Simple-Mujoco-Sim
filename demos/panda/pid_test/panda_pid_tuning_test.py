@@ -26,7 +26,8 @@ def main():
     result_qpos = get_result_qpos(panda_robot, init_qpos, eef_pose)
 
     jpos_controller = JointPositionController(sim=sim, eef_name=panda_robot.eef_name)
-    jpos_controller.kp = jpos_controller.nums2array(30, 7)
+    jpos_controller.kp = jpos_controller.nums2array(50, 7)
+    jpos_controller.kd = jpos_controller.nums2array(22.2, 7)
 
     while t < n_timesteps:
         torque = jpos_controller.run_controller(sim, result_qpos)
