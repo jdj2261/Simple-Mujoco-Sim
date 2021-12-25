@@ -1,8 +1,8 @@
-# Welcome to MuJoCo world
+# Simple Mujoco Sim
 
-This repository was created for manipulator control in a mujoco environment.
+This repository was created for manipulator control demo in a mujoco environment.
 
-You can see four robot(`Franka Emilka's panda`, `Kuka's iiwa14 and iiwa7`, `Rethink's sawyer`) demos.
+You can see four robot(`Franka Emika's panda`, `Kuka's iiwa14 and iiwa7`, `Rethink's sawyer`) demos.
 
 As a library to solve kinematics, I used [`pykin`](https://github.com/jdj2261/pykin) python kinematics library.
 
@@ -17,13 +17,18 @@ You need a [mujoco-py](https://github.com/openai/mujoco-py) and [pykin](https://
 
 I recommend to install using conda or venv
 
-Demo is only available in Mujoco 2.0 version. It will be updated to version 2.1 soon.
+Demo is only available in mujoco version 2.0 or higher.
 
 - Install Mujoco
 
-  1. Download the MuJoCo version 2.0 binaries for [Linux](https://roboti.us/download/mujoco200_linux.zip) or [OSX](https://roboti.us/download/mujoco200_macos.zip).
-  2. Extract the downloaded `mujoco200` directory into `~/.mujoco/mujoco200`.
-  3. Copy License key `mjkey.txt` file to `~/.mujoco/mujoco200/bin/` and `~/.mujoco/`
+  - for version 2.0
+    - Download the MuJoCo version 2.0 binaries for [Linux](https://roboti.us/download/mujoco200_linux.zip) or [OSX](https://roboti.us/download/mujoco200_macos.zip).
+    - Extract the downloaded `mujoco200` directory into `~/.mujoco/mujoco200`.
+    - Copy License key `mjkey.txt` file to `~/.mujoco/mujoco200/bin/` and `~/.mujoco/`
+
+  - for version 2.1
+    - Download the MuJoCo version 2.1 binaries for [Linux](https://mujoco.org/download/mujoco210-linux-x86_64.tar.gz) or [OSX](https://mujoco.org/download/mujoco210-macos-x86_64.tar.gz).
+    - Extract the downloaded `mujoco210` directory into `~/.mujoco/mujoco210`.
 
 - Install Mujoco-py
 
@@ -53,7 +58,7 @@ Demo is only available in Mujoco 2.0 version. It will be updated to version 2.1 
 
     </details>
 
-  - in Ubuntu 18.04
+  - in Ubuntu 18.04 or 20.04
 
     <details>
       <summary>Example</summary>
@@ -70,9 +75,19 @@ Demo is only available in Mujoco 2.0 version. It will be updated to version 2.1 
 
   - install mujoco-py using pip
 
-    ~~~
-    $ pip install -U 'mujoco-py<2.1,>=2.0'
-    ~~~
+    - for version 2.0
+    
+      ~~~
+      $ pip install -U 'mujoco-py<2.1,>=2.0'
+      ~~~
+    
+    - for version 2.1
+    
+      ~~~
+      $ pip install -U 'mujoco-py<2.2,>=2.1'
+      ~~~
+    
+      
 
 - Install pykin
 
@@ -121,19 +136,17 @@ Demo is only available in Mujoco 2.0 version. It will be updated to version 2.1 
     $ pip install pykin
     ~~~
 
-### Install Mujoco-Manipulation-Demo
+### Install Simple-Mujoco-Sim
 
 ~~~
 $ cd ~/
-$ git clone https://github.com/jdj2261/MuJoCo-Manipulation-Demo.git
+$ git clone https://github.com/jdj2261/Simple-Mujoco-Sim.git
 
-## For use URDF
+## For using robot's kinematics and planning
 $ git clone --recurse-submodules https://github.com/jdj2261/pykin.git
-$ cd MuJoCo-Manipulation-Demo
-$ ln -s ~/pykin .
+$ cd Simple-Mujoco-Sim
+$ ln -s ~/pykin . 
 ~~~
-
-
 
 ## Demo
 
@@ -142,10 +155,3 @@ $ ln -s ~/pykin .
 
 
 ### 2. Joint Position Control
-
-
-
-### 3. Pick and Place
-
-
-
