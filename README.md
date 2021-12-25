@@ -42,7 +42,7 @@ Demo is only available in mujoco version 2.0 or higher.
     $ brew install boost
     $ brew install hdf5
     
-    # Add this to your .bashrc/.zshrc:
+    # Add this to your .bashrc or .zshrc:
     export PATH="/usr/local/opt/llvm/bin:$PATH"
     
     export CC="/usr/local/opt/llvm/bin/clang"
@@ -66,7 +66,7 @@ Demo is only available in mujoco version 2.0 or higher.
     ~~~
     $ sudo apt install -y libosmesa6-dev libgl1-mesa-glx libglfw3
     
-    # Add this to your .bashrc/.zshrc:
+    # Add this to your .bashrc:
     export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:$HOME/.mujoco/mujoco200/bin
     export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libGLEW.so
     ~~~
