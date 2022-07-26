@@ -11,7 +11,7 @@ from demos.common import load_mujoco, load_pykin, get_result_qpos
 def main():
     sim, viewer = load_mujoco(parent_path + "asset/panda_sim/franka_panda.xml")
     panda_robot = load_pykin(parent_path + 'pykin/asset/urdf/panda/panda.urdf')
-    panda_robot.setup_link_name("panda_link_0", "panda_right_hand")
+    panda_robot.setup_link_name("panda_link_0", "right_hand")
 
     init_qpos = [0, 0.1963495375, 0.00, -2.616, 0.00, 2.9415926, 0.78539815]
     desired_qpos = np.array([0, 0, 0, -1.5708, 0, 1.8675, 0])

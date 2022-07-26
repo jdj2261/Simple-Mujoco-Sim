@@ -49,7 +49,7 @@
                                                 <geom type="mesh" contype="0" conaffinity="0" group="1" mesh="panda_link7_vis" name="panda_link_7_visual" rgba="1. 1. 1. 1." />
                                                 <geom type="mesh" group="0" mesh="panda_link7" name="panda_link_7_collision"/>
                                                 <!-- rotate 135deg to align physically to the tool-->
-                                                <body name="panda_right_hand" pos="0 0 0.1065" quat="0.924 0 0 -0.383">
+                                                <body name="right_hand" pos="0 0 0.1065" quat="0.924 0 0 -0.383">
                                                     <inertial pos="0 0 0" mass="0.5" diaginertia="0.05 0.05 0.05" />
                                                     <!-- This camera points out from the eef. -->
                                                     <camera mode="fixed" name="panda_eye_in_hand" pos="0.05 0 0" quat="0 0.707108 0.707108 0" fovy="75"/>
